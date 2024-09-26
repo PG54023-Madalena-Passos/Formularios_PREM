@@ -1,4 +1,4 @@
-# Formulários PREM
+# Ferramenta de Gestão Automática de Formulários PREM via Interoperabilidade HL7 em Sistemas Hospitalares
 
 ## Estruturação até ao momento
 
