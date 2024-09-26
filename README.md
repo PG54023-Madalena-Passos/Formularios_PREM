@@ -2,7 +2,9 @@
 
 ## Resumo (Provisório)
 Este projeto tem como objetivo o desenvolvimento de uma ferramenta para a disponibilização automática de formulários de Experiência Relatada por Pacientes (PREMs) após a sua interação em ambiente hospitalar.
+
 Esta ferramenta permitirá o envio automático de um _link_ de acesso ao preenchimento de um formulário PREM padronizado aos utentes após eventos clínicos, como consultas, exames ou internamentos, durante um período de tempo limitado, estipulado de acordo com a sua tipologia. Adicionalmente, é pretendido que o processo de reconhecimento do evento em questão seja efetuado recorrendo à captação de informação padronizada presente em mensagens baseadas em normas HL7, procurando garantir a interoperabilidade do sistema desenvolvido em ambiente clínico.
+
 Após a submissão do formulário, as respostas inseridas serão armazenadas juntamente com dados relevantes sobre o evento associado, visando a geração de insights que possibilitem a melhoria da gestão da experiência do paciente e da qualidade dos serviços prestados.
 
 ## Estruturação até ao momento
