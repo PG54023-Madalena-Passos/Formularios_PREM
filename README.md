@@ -11,15 +11,13 @@ Após a submissão do formulário, as respostas inseridas serão armazenadas jun
 
 1. Introdução
 
-	1.1. Enquadramento
+	1.1. Enquadramento e Motivação
    
-	1.2. Motivação
+	1.2. Objetivos
    
-	1.3. Solução Proposta e Objetivos
-   
-	1.4. Estrutura da Dissertação
+	1.3. Estrutura da Dissertação
 
-2. Estado da Arte
+2. Conceitos e Tecnologias
 
 	2.1. Interoperabilidade em Sistemas de Saúde
 
@@ -51,10 +49,8 @@ Após a submissão do formulário, as respostas inseridas serão armazenadas jun
 
 3. Desenvolvimento do _Software_
 
-4. Resultados
+4. Análise e Discussão de Resultados
 
-5. Discussão
-
-6. Conclusões e Trabalho Futuro
+5. Conclusões e Trabalho Futuro
 
 
