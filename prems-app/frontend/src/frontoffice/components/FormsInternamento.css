@@ -1,0 +1,316 @@
+/* Barra verde no topo */
+.barra-verde-topo {
+    background-color: #008f39;
+    height: 8px;
+    width: 100%;
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 100;
+  }
+  
+  .formulario-container {
+    max-width: 1000px;
+    margin: 20px auto;
+    padding: 20px;
+    font-family: Arial, sans-serif;
+  }
+  
+  .titulo {
+    font-size: 24px;
+    font-weight: bold;
+    text-align: center;
+    margin-bottom: 30px;
+    color: #333;
+  }
+  
+  .progresso-container {
+    margin-bottom: 30px;
+    display: flex;
+    justify-content: center;
+  }
+  
+  .progresso-wrapper {
+    display: flex;
+    align-items: center;
+    width: 100%;
+    max-width: 500px;
+  }
+  
+  .progresso-texto {
+    font-size: 14px;
+    margin-right: 10px;
+  }
+  
+  .barra-progresso {
+    height: 10px;
+    background-color: #e0e0e0;
+    border-radius: 5px;
+    overflow: hidden;
+    flex-grow: 1;
+  }
+  
+  .progresso-preenchido {
+    height: 100%;
+    background-color: #008f39;
+    border-radius: 5px;
+    transition: width 0.3s ease;
+  }
+  
+  .secao-perguntas, .secao-sucesso {
+    background-color: #f2f2f2;
+    border-radius: 8px;
+    padding: 20px;
+    margin-bottom: 20px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  }
+  
+  .secao-titulo, .sucesso-titulo {
+    color: #008f39;
+    font-size: 19px;
+    text-align: center;
+    margin-bottom: 30px;
+    text-transform: uppercase;
+  }
+  
+  /* Estilos específicos para a página de sucesso */
+  .secao-sucesso {
+    padding: 40px 20px;
+    text-align: center;
+    min-height: 200px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+  }
+  
+  .sucesso-titulo {
+    font-size: 22px;
+    margin-bottom: 30px;
+  }
+  
+  .sucesso-mensagem {
+    font-size: 16px;
+    line-height: 1.6;
+    max-width: 600px;
+    margin: 0 auto;
+    color: #444;
+  }
+  
+  .pergunta {
+    margin: 0px 30px 30px;
+  }
+  
+  .pergunta-texto {
+    font-size: 16px;
+    line-height: 1.5;
+    margin-bottom: 15px;
+  }
+  
+  .opcoes-resposta {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-around;
+    margin-top: 10px;
+  }
+  
+  .opcao {
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+    position: relative;
+    margin: 8px 10px;
+    min-width: 120px;
+  }
+  
+  .opcao input[type="radio"] {
+    opacity: 0;
+    position: absolute;
+  }
+  
+  .radio-custom {
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    border: 2px solid #ccc;
+    display: inline-block;
+    position: relative;
+    margin-right: 10px;
+  }
+  
+  .opcao input[type="radio"]:checked + .radio-custom {
+    border-color: #008f39;
+  }
+  
+  .opcao input[type="radio"]:checked + .radio-custom::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 12px;
+    height: 12px;
+    background-color: #008f39;
+    border-radius: 50%;
+  }
+  
+  .opcao-texto {
+    font-size: 15px;
+  }
+  
+  .botoes-navegacao {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 20px;
+  }
+  
+  .botao-anterior, .botao-proximo {
+    padding: 10px 20px;
+    border-radius: 25px;
+    border: none;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background-color 0.2s;
+  }
+  
+  .botao-anterior {
+    background-color: #e0e0e0;
+    color: #333;
+  }
+  
+  .botao-anterior:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+  
+  .botao-proximo {
+    background-color: #008f39;
+    color: white;
+  }
+  
+  .botao-anterior:hover:not(:disabled) {
+    background-color: #d0d0d0;
+  }
+  
+  .botao-proximo:hover {
+    background-color: #007530;
+  }
+  
+  .carregando, .erro {
+    text-align: center;
+    padding: 40px;
+    font-size: 16px;
+  }
+  
+  .erro {
+    color: #e53935;
+  }
+  
+  /* Estilos responsivos para tablet */
+  @media (max-width: 768px) {
+    .formulario-container {
+      padding: 15px;
+      margin: 15px auto;
+    }
+    
+    .titulo {
+      font-size: 22px;
+      margin-bottom: 20px;
+    }
+    
+    .pergunta {
+      margin: 0px 15px 25px;
+    }
+    
+    .pergunta-texto {
+      font-size: 15px;
+    }
+    
+    .secao-titulo {
+      font-size: 17px;
+    }
+    
+    .sucesso-titulo {
+      font-size: 20px;
+    }
+    
+    .sucesso-mensagem {
+      font-size: 15px;
+      padding: 0 20px;
+    }
+    
+    .opcoes-resposta {
+      justify-content: flex-start;
+    }
+    
+    .opcao {
+      margin: 5px;
+      min-width: 45%;
+    }
+  }
+  
+  /* Estilos responsivos para celular */
+  @media (max-width: 480px) {
+    .formulario-container {
+      padding: 10px;
+      margin: 10px auto;
+    }
+    
+    .titulo {
+      font-size: 18px;
+      margin-bottom: 15px;
+    }
+    
+    .secao-perguntas, .secao-sucesso {
+      padding: 15px;
+    }
+    
+    .secao-titulo {
+      font-size: 16px;
+      margin-bottom: 20px;
+    }
+    
+    .sucesso-titulo {
+      font-size: 18px;
+    }
+    
+    .sucesso-mensagem {
+      font-size: 14px;
+      line-height: 1.4;
+    }
+    
+    .pergunta {
+      margin: 0px 5px 20px;
+    }
+    
+    .pergunta-texto {
+      font-size: 14px;
+      line-height: 1.4;
+    }
+    
+    .opcoes-resposta {
+      flex-direction: column;
+      align-items: flex-start;
+    }
+    
+    .opcao {
+      margin: 5px 0;
+      width: 100%;
+      min-width: unset;
+    }
+    
+    .opcao-texto {
+      font-size: 14px;
+    }
+    
+    .botoes-navegacao {
+      flex-direction: column-reverse;
+      gap: 10px;
+    }
+    
+    .botao-anterior, .botao-proximo {
+      width: 100%;
+      padding: 12px 0;
+      font-size: 14px;
+    }
+  }

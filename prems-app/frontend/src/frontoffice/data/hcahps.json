@@ -1,0 +1,556 @@
+{
+    "_id": {
+      "$oid": "6798eee7dc581e0568e94783"
+    },
+    "resourceType": "Questionnaire",
+    "id": "hcahps-inquerito",
+    "title": "Inquérito de Satisfação do Utente",
+    "status": "active",
+    "subjectType": ["Patient"],
+    "item": [
+        {
+            "linkId": "grp1",
+            "text": "CUIDADOS DE ENFERMAGEM",
+            "type": "group",
+            "item": [
+                {
+                    "linkId": "1",
+                    "text": "Durante esta hospitalização, com que frequência o pessoal de enfermagem o tratou com cortesia e respeito?",
+                    "type": "choice",
+                    "answerOption": [
+                      {
+                        "valueString": "Nunca", "valueInteger": 1
+                      },
+                      {
+                        "valueString": "Algumas vezes", "valueInteger": 2
+                      },
+                      {
+                        "valueString": "Habitualmente", "valueInteger": 3
+                      },
+                      {
+                        "valueString": "Sempre", "valueInteger": 4
+                      }
+                    ]
+                  },
+                  {
+                    "linkId": "2",
+                    "text": "Durante esta hospitalização, com que frequência o pessoal de enfermagem o escutou atentamente?",
+                    "type": "choice",
+                    "answerOption": [
+                      {
+                        "valueString": "Nunca", "valueInteger": 1
+                      },
+                      {
+                        "valueString": "Algumas vezes", "valueInteger": 2
+                      },
+                      {
+                        "valueString": "Habitualmente", "valueInteger": 3
+                      },
+                      {
+                        "valueString": "Sempre", "valueInteger": 4
+                      }
+                    ]
+                  },
+                  {
+                    "linkId": "3",
+                    "text": "Durante esta hospitalização, com que frequência o pessoal de enfermagem lhe explicou as coisas de uma forma que conseguisse entender?",
+                    "type": "choice",
+                    "answerOption": [
+                      {
+                        "valueString": "Nunca", "valueInteger": 1
+                      },
+                      {
+                        "valueString": "Algumas vezes", "valueInteger": 2
+                      },
+                      {
+                        "valueString": "Habitualmente", "valueInteger": 3
+                      },
+                      {
+                        "valueString": "Sempre", "valueInteger": 4
+                      }
+                    ]
+                  }
+            ]
+        
+        },
+        {
+         "linkId": "grp2",
+            "text": "CUIDADOS MÉDICOS",
+            "type": "group",
+            "item": [
+                  {
+                    "linkId": "4",
+                    "text": "Durante esta hospitalização, com que frequência os médicos o trataram com cortesia e respeito?",
+                    "type": "choice",
+                    "answerOption": [
+                      {
+                        "valueString": "Nunca", "valueInteger": 1
+                      },
+                      {
+                        "valueString": "Algumas vezes", "valueInteger": 2
+                      },
+                      {
+                        "valueString": "Habitualmente", "valueInteger": 3
+                      },
+                      {
+                        "valueString": "Sempre", "valueInteger": 4
+                      }
+                    ]
+                  },
+                  {
+                    "linkId": "5",
+                    "text": "Durante esta hospitalização, com que frequência os médicos o escutaram atentamente?",
+                    "type": "choice",
+                    "answerOption": [
+                      {
+                        "valueString": "Nunca", "valueInteger": 1
+                      },
+                      {
+                        "valueString": "Algumas vezes", "valueInteger": 2
+                      },
+                      {
+                        "valueString": "Habitualmente", "valueInteger": 3
+                      },
+                      {
+                        "valueString": "Sempre", "valueInteger": 4
+                      }
+                    ]
+                  },
+                  {
+                    "linkId": "6",
+                    "text": "Durante esta hospitalização, com que frequência os médicos lhe explicaram as coisas de uma forma que conseguisse entender?",
+                    "type": "choice",
+                    "answerOption": [
+                      {
+                        "valueString": "Nunca", "valueInteger": 1
+                      },
+                      {
+                        "valueString": "Algumas vezes", "valueInteger": 2
+                      },
+                      {
+                        "valueString": "Habitualmente", "valueInteger": 3
+                      },
+                      {
+                        "valueString": "Sempre", "valueInteger": 4
+                      }
+                    ]
+                  }
+            ]   
+        },
+        {
+        "linkId": "grp3",
+        "text": "AMBIENTE HOSPITALAR",
+        "type": "group",
+        "item": [
+            {
+            "linkId": "7",
+            "text": "Durante esta hospitalização, com que frequência o seu quarto e sanitário foram mantidos limpos?",
+            "type": "choice",
+            "answerOption": [
+                {
+                "valueString": "Nunca", "valueInteger": 1
+                },
+                {
+                "valueString": "Algumas vezes", "valueInteger": 2
+                },
+                {
+                "valueString": "Habitualmente", "valueInteger": 3
+                },
+                {
+                "valueString": "Sempre", "valueInteger": 4
+                }
+                ]
+            },
+            {
+            "linkId": "8",
+            "text": "Durante esta hospitalização, com que frequência conseguiu descansar o que precisava?",
+            "type": "choice",
+            "answerOption": [
+                {
+                "valueString": "Nunca", "valueInteger": 1
+                },
+                {
+                "valueString": "Algumas vezes", "valueInteger": 2
+                },
+                {
+                "valueString": "Habitualmente", "valueInteger": 3
+                },
+                {
+                "valueString": "Sempre", "valueInteger": 4
+                }
+                ]
+            },
+            {
+            "linkId": "9",
+            "text": "Durante esta hospitalização, com que frequência a área próxima do seu quarto se manteve silenciosa durante a noite?",
+            "type": "choice",
+            "answerOption": [
+                {
+                "valueString": "Nunca", "valueInteger": 1
+                },
+                {
+                "valueString": "Algumas vezes", "valueInteger": 2
+                },
+                {
+                "valueString": "Habitualmente", "valueInteger": 3
+                },
+                {
+                "valueString": "Sempre", "valueInteger": 4
+                }
+                ]
+            }
+        ]
+        },
+        {
+        "linkId": "grp4",
+        "text": "OS SEUS CUIDADOS NESTE HOSPITAL",
+        "type": "group",
+        "item": [
+            {
+                "linkId": "10",
+                "text": "Durante esta hospitalização, com que frequência é que os médicos, enfermeiros e outro pessoal do hospital foram informados e atualizados sobre os seus cuidados?",
+                "type": "choice",
+                "answerOption": [
+                  {
+                    "valueString": "Nunca", "valueInteger": 1
+                  },
+                  {
+                    "valueString": "Algumas vezes", "valueInteger": 2
+                  },
+                  {
+                    "valueString": "Habitualmente", "valueInteger": 3
+                  },
+                  {
+                    "valueString": "Sempre", "valueInteger": 4
+                  }
+                ]
+              },
+              {
+                "linkId": "11",
+                "text": "Durante esta hospitalização, com que frequência os médicos, enfermeiros e outro pessoal do hospital trabalharam juntos, de forma bem-sucedida, para cuidar de si?",
+                "type": "choice",
+                "answerOption": [
+                  {
+                    "valueString": "Nunca", "valueInteger": 1
+                  },
+                  {
+                    "valueString": "Algumas vezes", "valueInteger": 2
+                  },
+                  {
+                    "valueString": "Habitualmente", "valueInteger": 3
+                  },
+                  {
+                    "valueString": "Sempre", "valueInteger": 4
+                  }
+                ]
+              },
+              {
+                "linkId": "12",
+                "text": "Durante esta hospitalização, necessitou de ajuda por parte do pessoal de enfermagem, ou de outro pessoal do hospital, para ir ao sanitário ou para usar uma arrastadeira (comadre)?",
+                "type": "choice",
+                "answerOption": [
+                  {
+                    "valueString": "Sim"
+                  },
+                  {
+                    "valueString": "Não"
+                  }
+                ]
+              },
+              {
+                "linkId": "13",
+                "text": "Com que frequência obteve ajuda para ir ao sanitário ou para usar a arrastadeira (comadre) logo que necessitava?",
+                "type": "choice",
+                "answerOption": [
+                  {
+                    "valueString": "Nunca", "valueInteger": 1
+                  },
+                  {
+                    "valueString": "Algumas vezes", "valueInteger": 2
+                  },
+                  {
+                    "valueString": "Habitualmente", "valueInteger": 3
+                  },
+                  {
+                    "valueString": "Sempre", "valueInteger": 4
+                  }
+                ],
+                "enableWhen": [
+                  {
+                    "question": "12",
+                    "operator": "=",
+                    "answer": "Sim"
+                  }
+                ]
+              },
+              {
+                "linkId": "14",
+                "text": "Durante esta hospitalização, quando pediu ajuda imediata, com que frequência a obteve assim que necessária?",
+                "type": "choice",
+                "answerOption": [
+                  {
+                    "valueString": "Nunca", "valueInteger": 1
+                  },
+                  {
+                    "valueString": "Algumas vezes", "valueInteger": 2
+                  },
+                  {
+                    "valueString": "Habitualmente", "valueInteger": 3
+                  },
+                  {
+                    "valueString": "Sempre", "valueInteger": 4
+                  },
+                  {
+                    "valueString": "Nunca pedi ajuda imediata"
+                  }
+                ]
+              },
+              {
+                "linkId": "15",
+                "text": "Durante esta hospitalização, foi-lhe administrado algum remédio que nunca tivesse tomado anteriormente?",
+                "type": "choice",
+                "answerOption": [
+                  {
+                    "valueString": "Sim"
+                  },
+                  {
+                    "valueString": "Não"
+                  }
+                ]
+              },
+              {
+                "linkId": "16",
+                "text": "Antes de lhe administrarem um novo remédio, com que frequência o pessoal do hospital lhe disse para que era o remédio?",
+                "type": "choice",
+                "answerOption": [
+                  {
+                    "valueString": "Nunca", "valueInteger": 1
+                  },
+                  {
+                    "valueString": "Algumas vezes", "valueInteger": 2
+                  },
+                  {
+                    "valueString": "Habitualmente", "valueInteger": 3
+                  },
+                  {
+                    "valueString": "Sempre", "valueInteger": 4
+                  }
+                ],
+                "enableWhen": [
+                  {
+                    "question": "15",
+                    "operator": "=",
+                    "answer": "Sim"
+                  }
+                ]
+              },
+              {
+                "linkId": "17",
+                "text": "Antes de lhe administrarem qualquer novo remédio, com que frequência o pessoal do hospital descreveu os possíveis efeitos secundários (colaterais) de uma forma que conseguisse entender?",
+                "type": "choice",
+                "answerOption": [
+                  {
+                    "valueString": "Nunca", "valueInteger": 1
+                  },
+                  {
+                    "valueString": "Algumas vezes", "valueInteger": 2
+                  },
+                  {
+                    "valueString": "Habitualmente", "valueInteger": 3
+                  },
+                  {
+                    "valueString": "Sempre", "valueInteger": 4
+                  }
+                ],
+                "enableWhen": [
+                  {
+                    "question": "15",
+                    "operator": "=",
+                    "answer": "Sim"
+                  }
+                ]
+              },
+              {
+                "linkId": "18",
+                "text": "Durante esta hospitalização, os médicos, enfermeiros e outro pessoal do hospital ajudaram-no(a) a descansar e recuperar?",
+                "type": "choice",
+                "answerOption": [
+                  {
+                    "valueString": "Não", "valueInteger": 1
+                  },
+                  {
+                    "valueString": "Sim, de certo modo", "valueInteger": 2
+                  },
+                  {
+                    "valueString": "Sim, sem dúvida", "valueInteger": 3
+                  }
+                ]
+              }
+        ] 
+        },
+        {
+        "linkId": "grp5",
+        "text": "RECEBER ALTA DO HOSPITAL",
+        "type": "group",
+        "item": [
+            {
+                "linkId": "19",
+                "text": "Os médicos, enfermeiros ou outro pessoal do hospital colaboraram consigo e com a sua família ou assistente de cuidados domiciliários (cuidador) na elaboração de planos para os seus cuidados após receber alta?",
+                "type": "choice",
+                "answerOption": [
+                  {
+                    "valueString": "Não", "valueInteger": 1
+                  },
+                  {
+                    "valueString": "Sim, de certo modo", "valueInteger": 2
+                  },
+                  {
+                    "valueString": "Sim, sem dúvida", "valueInteger": 3
+                  }
+                ]
+              },
+              {
+                "linkId": "20",
+                "text": "Os médicos, enfermeiros ou outro pessoal do hospital disponibilizaram aos seus familiares ou assistente de cuidados domiciliários (cuidador) informações suficientes sobre sintomas ou problemas de saúde a que deve estar atento(a) após receber alta?",
+                "type": "choice",
+                "answerOption": [
+                  {
+                    "valueString": "Não", "valueInteger": 1
+                  },
+                  {
+                    "valueString": "Sim, de certo modo", "valueInteger": 2
+                  },
+                  {
+                    "valueString": "Sim, sem dúvida", "valueInteger": 3
+                  },
+                  {
+                    "valueString": "Não tinha familiares ou assistente de cuidados domiciliários (cuidador) para vigiar sintomas ou problemas de saúde"
+                  }
+                ]
+              },
+              {
+                "linkId": "21",
+                "text": "Quando teve alta do hospital, foi diretamente para a sua casa, para a casa de outra pessoa ou para outra instituição de cuidados de saúde?",
+                "type": "choice",
+                "answerOption": [
+                  {
+                    "valueString": "Própria casa"
+                  },
+                  {
+                    "valueString": "Casa de outra pessoa"
+                  },
+                  {
+                    "valueString": "Outra instituição de cuidados de saúde"
+                  }
+                ]
+              },
+              {
+                "linkId": "22",
+                "text": "Durante esta hospitalização, os médicos, pessoal de enfermagem, ou outro pessoal do hospital, falaram-lhe sobre se teria a ajuda necessária após a alta do hospital?",
+                "type": "choice",
+                "answerOption": [
+                  {
+                    "valueString": "Sim", "valueInteger": 1
+                  },
+                  {
+                    "valueString": "Não", "valueInteger": 2
+                  }
+                ],
+                "enableWhen": [
+                  {
+                    "question": "21",
+                    "operator": "!=",
+                    "answer": "Outra instituição de cuidados de saúde"
+                  }
+                ]
+              },
+              {
+                "linkId": "23",
+                "text": "Durante esta hospitalização recebeu informação, por escrito, referente a sintomas ou problemas de saúde aos quais deveria estar atento depois de ter alta do hospital?",
+                "type": "choice",
+                "answerOption": [
+                  {
+                    "valueString": "Sim", "valueInteger": 1
+                  },
+                  {
+                    "valueString": "Não", "valueInteger": 2
+                  }
+                ],
+                "enableWhen": [
+                  {
+                    "question": "21",
+                    "operator": "!=",
+                    "answer": "Outra instituição de cuidados de saúde"
+                  }
+                ]
+              }
+        ]
+        },
+        {
+        "linkId": "grp6",
+        "text": "CLASSIFICAÇÃO GERAL DO HOSPITAL",
+        "type": "group",
+        "item": [
+            {
+                "linkId": "24",
+                "text": "Usando um número de 0 a 10, em que 0 significa o pior hospital possível e 10 significa o melhor hospital possível, que número usaria para classificar este hospital durante a sua hospitalização?",
+                "type": "choice",
+                "answerOption": [
+                  {
+                    "valueString": "0 O pior hospital possível", "valueInteger": 0
+                  },
+                  {
+                    "valueString": "1", "valueInteger": 1
+                  },
+                  {
+                    "valueString": "2", "valueInteger": 2
+                  },
+                  {
+                    "valueString": "3", "valueInteger": 3
+                  },
+                  {
+                    "valueString": "4", "valueInteger": 4
+                  },
+                  {
+                    "valueString": "5", "valueInteger": 5
+                  },
+                  {
+                    "valueString": "6", "valueInteger": 6
+                  },
+                  {
+                    "valueString": "7", "valueInteger": 7
+                  },
+                  {
+                    "valueString": "8", "valueInteger": 8
+                  },
+                  {
+                    "valueString": "9", "valueInteger": 9
+                  },
+                  {
+                    "valueString": "10 O melhor hospital possível", "valueInteger": 10
+                  }
+                ]
+              },
+              {
+                "linkId": "25",
+                "text": "Recomendaria este hospital aos seus amigos e familiares?",
+                "type": "choice",
+                "answerOption": [
+                  {
+                    "valueString": "Definitivamente não", "valueInteger": 1
+                  },
+                  {
+                    "valueString": "Provavelmente não", "valueInteger": 2
+                  },
+                  {
+                    "valueString": "Provavelmente sim", "valueInteger": 3
+                  },
+                  {
+                    "valueString": "Definitivamente sim", "valueInteger": 4
+                  }
+                ]
+              }
+        ]   
+        }
+    ]
+}

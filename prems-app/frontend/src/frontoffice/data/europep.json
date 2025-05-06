@@ -1,0 +1,681 @@
+{
+    "_id": {
+      "$oid": "67ae31738764c1041e290bb3"
+    },
+    "resourceType": "Questionnaire",
+    "id": "patient-satisfaction-survey",
+    "status": "active",
+    "title": "Patient Satisfaction Survey",
+    "subjectType": ["Patient"],
+    "item": [
+      {
+        "linkId": "grp1",
+        "text": "CUIDADOS DO PROFISSIONAL DE SAÚDE",
+        "type": "group",
+        "item": [
+          {
+            "linkId": "1",
+            "text": "Fazê-lo(a) sentir que tem tempo durante a consulta.",
+            "type": "choice",
+            "answerOption": [
+              {
+                "valueInteger": 1,
+                "text": "Discordo totalmente"
+              },
+              {
+                "valueInteger": 2,
+                "text": "Discordo"
+              },
+              {
+                "valueInteger": 3,
+                "text": "Neutro"
+              },
+              {
+                "valueInteger": 4,
+                "text": "Concordo"
+              },
+              {
+                "valueInteger": 5,
+                "text": "Concordo totalmente"
+              }
+            ]
+          },
+          {
+            "linkId": "2",
+            "text": "Interesse mostrado pela sua situação pessoal.",
+            "type": "choice",
+            "answerOption": [
+              {
+                "valueInteger": 1,
+                "text": "Mau"
+              },
+              {
+                "valueInteger": 2,
+                "text": "Razoável"
+              },
+              {
+                "valueInteger": 3,
+                "text": "Bom"
+              },
+              {
+                "valueInteger": 4,
+                "text": "Muito bom"
+              },
+              {
+                "valueInteger": 5,
+                "text": "Excelente"
+              }
+            ]
+          },
+          {
+            "linkId": "3",
+            "text": "Facilidade com que se sentiu à vontade para contar ao profissional de saúde os seus problemas.",
+            "type": "choice",
+            "answerOption": [
+              {
+                "valueInteger": 1,
+                "text": "Mau"
+              },
+              {
+                "valueInteger": 2,
+                "text": "Razoável"
+              },
+              {
+                "valueInteger": 3,
+                "text": "Bom"
+              },
+              {
+                "valueInteger": 4,
+                "text": "Muito bom"
+              },
+              {
+                "valueInteger": 5,
+                "text": "Excelente"
+              }
+            ]
+          },
+          {
+            "linkId": "4",
+            "text": "Forma como foi envolvido(a) nas decisões sobre os cuidados que o médico lhe prestou.",
+            "type": "choice",
+            "answerOption": [
+              {
+                "valueInteger": 1,
+                "text": "Mau"
+              },
+              {
+                "valueInteger": 2,
+                "text": "Razoável"
+              },
+              {
+                "valueInteger": 3,
+                "text": "Bom"
+              },
+              {
+                "valueInteger": 4,
+                "text": "Muito bom"
+              },
+              {
+                "valueInteger": 5,
+                "text": "Excelente"
+              }
+            ]
+          },
+          {
+            "linkId": "5",
+            "text": "Forma como o médico o(a) ouviu.",
+            "type": "choice",
+            "answerOption": [
+              {
+                "valueInteger": 1,
+                "text": "Mau"
+              },
+              {
+                "valueInteger": 2,
+                "text": "Razoável"
+              },
+              {
+                "valueInteger": 3,
+                "text": "Bom"
+              },
+              {
+                "valueInteger": 4,
+                "text": "Muito bom"
+              },
+              {
+                "valueInteger": 5,
+                "text": "Excelente"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "linkId": "grp2",
+        "text": "OS SEUS CUIDADOS NESTE HOSPITAL",
+        "type": "group",
+        "item": [
+          {
+            "linkId": "6",
+            "text": "Confidencialidade da informação sobre o seu processo.",
+            "type": "choice",
+            "answerOption": [
+              {
+                "valueInteger": 1,
+                "text": "Mau"
+              },
+              {
+                "valueInteger": 2,
+                "text": "Razoável"
+              },
+              {
+                "valueInteger": 3,
+                "text": "Bom"
+              },
+              {
+                "valueInteger": 4,
+                "text": "Muito bom"
+              },
+              {
+                "valueInteger": 5,
+                "text": "Excelente"
+              }
+            ]
+          },
+          {
+            "linkId": "7",
+            "text": "Forma como lhe foi prestado alívio rápido dos seus sintomas.",
+            "type": "choice",
+            "answerOption": [
+              {
+                "valueInteger": 1,
+                "text": "Mau"
+              },
+              {
+                "valueInteger": 2,
+                "text": "Razoável"
+              },
+              {
+                "valueInteger": 3,
+                "text": "Bom"
+              },
+              {
+                "valueInteger": 4,
+                "text": "Muito bom"
+              },
+              {
+                "valueInteger": 5,
+                "text": "Excelente"
+              }
+            ]
+          },
+          {
+            "linkId": "8",
+            "text": "Ajuda que recebeu para se sentir suficientemente bem para desempenhar as suas tarefas diárias.",
+            "type": "choice",
+            "answerOption": [
+              {
+                "valueInteger": 1,
+                "text": "Mau"
+              },
+              {
+                "valueInteger": 2,
+                "text": "Razoável"
+              },
+              {
+                "valueInteger": 3,
+                "text": "Bom"
+              },
+              {
+                "valueInteger": 4,
+                "text": "Muito bom"
+              },
+              {
+                "valueInteger": 5,
+                "text": "Excelente"
+              }
+            ]
+          },
+          {
+            "linkId": "9",
+            "text": "Atenção dispensada aos seus problemas.",
+            "type": "choice",
+            "answerOption": [
+              {
+                "valueInteger": 1,
+                "text": "Mau"
+              },
+              {
+                "valueInteger": 2,
+                "text": "Razoável"
+              },
+              {
+                "valueInteger": 3,
+                "text": "Bom"
+              },
+              {
+                "valueInteger": 4,
+                "text": "Muito bom"
+              },
+              {
+                "valueInteger": 5,
+                "text": "Excelente"
+              }
+            ]
+          },
+          {
+            "linkId": "10",
+            "text": "Foram-lhe fornecidas explicações sobre os medicamentos, tratamentos e exames prescritos.",
+            "type": "choice",
+            "answerOption": [
+              {
+                "valueInteger": 1,
+                "text": "Discordo totalmente"
+              },
+              {
+                "valueInteger": 2,
+                "text": "Discordo"
+              },
+              {
+                "valueInteger": 3,
+                "text": "Neutro"
+              },
+              {
+                "valueInteger": 4,
+                "text": "Concordo"
+              },
+              {
+                "valueInteger": 5,
+                "text": "Concordo totalmente"
+              }
+            ]
+          },
+          {
+            "linkId": "11",
+            "text": "Sente que foi suficientemente informado(a) sobre os seus sintomas e a sua doença.",
+            "type": "choice",
+            "answerOption": [
+              {
+                "valueInteger": 1,
+                "text": "Discordo totalmente"
+              },
+              {
+                "valueInteger": 2,
+                "text": "Discordo"
+              },
+              {
+                "valueInteger": 3,
+                "text": "Neutro"
+              },
+              {
+                "valueInteger": 4,
+                "text": "Concordo"
+              },
+              {
+                "valueInteger": 5,
+                "text": "Concordo totalmente"
+              }
+            ]
+          },
+          {
+            "linkId": "12",
+            "text": "Sente que recebeu ajuda suficiente para enfrentar os problemas emocionais relacionados com o seu estado de saúde.",
+            "type": "choice",
+            "answerOption": [
+              {
+                "valueInteger": 1,
+                "text": "Discordo totalmente"
+              },
+              {
+                "valueInteger": 2,
+                "text": "Discordo"
+              },
+              {
+                "valueInteger": 3,
+                "text": "Neutro"
+              },
+              {
+                "valueInteger": 4,
+                "text": "Concordo"
+              },
+              {
+                "valueInteger": 5,
+                "text": "Concordo totalmente"
+              }
+            ]
+          },
+          {
+            "linkId": "13",
+            "text": "Conhecimento sobre o que foi feito e dito durante a consulta.",
+            "type": "choice",
+            "answerOption": [
+              {
+                "valueInteger": 1,
+                "text": "Mau"
+              },
+              {
+                "valueInteger": 2,
+                "text": "Razoável"
+              },
+              {
+                "valueInteger": 3,
+                "text": "Bom"
+              },
+              {
+                "valueInteger": 4,
+                "text": "Muito bom"
+              },
+              {
+                "valueInteger": 5,
+                "text": "Excelente"
+              }
+            ]
+          },
+          {
+            "linkId": "14",
+            "text": "Preparação sobre o que esperar dos cuidados hospitalares, de outros especialistas ou outros prestadores de cuidados.",
+            "type": "choice",
+            "answerOption": [
+              {
+                "valueInteger": 1,
+                "text": "Mau"
+              },
+              {
+                "valueInteger": 2,
+                "text": "Razoável"
+              },
+              {
+                "valueInteger": 3,
+                "text": "Bom"
+              },
+              {
+                "valueInteger": 4,
+                "text": "Muito bom"
+              },
+              {
+                "valueInteger": 5,
+                "text": "Excelente"
+              }
+            ]
+          },
+          {
+            "linkId": "15",
+            "text": "Tempo que lhe foi dedicado pelo pessoal de enfermagem.",
+            "type": "choice",
+            "answerOption": [
+              {
+                "valueInteger": 1,
+                "text": "Mau"
+              },
+              {
+                "valueInteger": 2,
+                "text": "Razoável"
+              },
+              {
+                "valueInteger": 3,
+                "text": "Bom"
+              },
+              {
+                "valueInteger": 4,
+                "text": "Muito bom"
+              },
+              {
+                "valueInteger": 5,
+                "text": "Excelente"
+              }
+            ]
+          },
+          {
+            "linkId": "16",
+            "text": "As explicações dadas pelos enfermeiros sobre os procedimentos e cuidados executados.",
+            "type": "choice",
+            "answerOption": [
+              {
+                "valueInteger": 1,
+                "text": "Mau"
+              },
+              {
+                "valueInteger": 2,
+                "text": "Razoável"
+              },
+              {
+                "valueInteger": 3,
+                "text": "Bom"
+              },
+              {
+                "valueInteger": 4,
+                "text": "Muito bom"
+              },
+              {
+                "valueInteger": 5,
+                "text": "Excelente"
+              }
+            ]
+          },
+          {
+            "linkId": "17",
+            "text": "O tempo que lhe foi dedicado no atendimento administrativo.",
+            "type": "choice",
+            "answerOption": [
+              {
+                "valueInteger": 1,
+                "text": "Mau"
+              },
+              {
+                "valueInteger": 2,
+                "text": "Razoável"
+              },
+              {
+                "valueInteger": 3,
+                "text": "Bom"
+              },
+              {
+                "valueInteger": 4,
+                "text": "Muito bom"
+              },
+              {
+                "valueInteger": 5,
+                "text": "Excelente"
+              }
+            ]
+          },
+          {
+            "linkId": "18",
+            "text": "A forma como foi esclarecido(a) quando solicitou uma informação ao secretariado clínico.",
+            "type": "choice",
+            "answerOption": [
+              {
+                "valueInteger": 1,
+                "text": "Mau"
+              },
+              {
+                "valueInteger": 2,
+                "text": "Razoável"
+              },
+              {
+                "valueInteger": 3,
+                "text": "Bom"
+              },
+              {
+                "valueInteger": 4,
+                "text": "Muito bom"
+              },
+              {
+                "valueInteger": 5,
+                "text": "Excelente"
+              }
+            ]
+          },
+          {
+            "linkId": "19",
+            "text": "A competência, cortesia e carinho dos profissionais.",
+            "type": "choice",
+            "answerOption": [
+              {
+                "valueInteger": 1,
+                "text": "Mau"
+              },
+              {
+                "valueInteger": 2,
+                "text": "Razoável"
+              },
+              {
+                "valueInteger": 3,
+                "text": "Bom"
+              },
+              {
+                "valueInteger": 4,
+                "text": "Muito bom"
+              },
+              {
+                "valueInteger": 5,
+                "text": "Excelente"
+              }
+            ]
+          },
+          {
+            "linkId": "20",
+            "text": "Tempo que demorou para que lhe fosse agendada a consulta. ",
+            "type": "choice",
+            "answerOption": [
+              {
+                "valueInteger": 1,
+                "text": "Mau"
+              },
+              {
+                "valueInteger": 2,
+                "text": "Razoável"
+              },
+              {
+                "valueInteger": 3,
+                "text": "Bom"
+              },
+              {
+                "valueInteger": 4,
+                "text": "Muito bom"
+              },
+              {
+                "valueInteger": 5,
+                "text": "Excelente"
+              }
+            ]
+          },
+          {
+            "linkId": "21",
+            "text": "Tempo que esperou na sala de espera.",
+            "type": "choice",
+            "answerOption": [
+              {
+                "valueInteger": 1,
+                "text": "Mau"
+              },
+              {
+                "valueInteger": 2,
+                "text": "Razoável"
+              },
+              {
+                "valueInteger": 3,
+                "text": "Bom"
+              },
+              {
+                "valueInteger": 4,
+                "text": "Muito bom"
+              },
+              {
+                "valueInteger": 5,
+                "text": "Excelente"
+              }
+            ]
+          }
+        ]
+      },
+      {
+      "linkId": "grp3",
+      "text": "AMBIENTE HOSPITALAR",
+      "type": "group",
+      "item": [
+        {
+          "linkId": "22",
+          "text": "Como avalia o conforto geral.",
+          "type": "choice",
+          "answerOption": [
+            {
+              "valueInteger": 1,
+              "text": "Mau"
+            },
+            {
+              "valueInteger": 2,
+              "text": "Razoável"
+            },
+            {
+              "valueInteger": 3,
+              "text": "Bom"
+            },
+            {
+              "valueInteger": 4,
+              "text": "Muito bom"
+            },
+            {
+              "valueInteger": 5,
+              "text": "Excelente"
+            }
+          ]
+        },
+        {
+          "linkId": "23",
+          "text": "Como avalia a limpeza das instalações.",
+          "type": "choice",
+          "answerOption": [
+            {
+              "valueInteger": 1,
+              "text": "Mau"
+            },
+            {
+              "valueInteger": 2,
+              "text": "Razoável"
+            },
+            {
+              "valueInteger": 3,
+              "text": "Bom"
+            },
+            {
+              "valueInteger": 4,
+              "text": "Muito bom"
+            },
+            {
+              "valueInteger": 5,
+              "text": "Excelente"
+            }
+          ]
+        },
+        {
+          "linkId": "24",
+          "text": "Como avalia a organização geral dos serviços oferecidos por esta unidade de cuidados de saúde.",
+          "type": "choice",
+          "answerOption": [
+            {
+              "valueInteger": 1,
+              "text": "Mau"
+            },
+            {
+              "valueInteger": 2,
+              "text": "Razoável"
+            },
+            {
+              "valueInteger": 3,
+              "text": "Bom"
+            },
+            {
+              "valueInteger": 4,
+              "text": "Muito bom"
+            },
+            {
+              "valueInteger": 5,
+              "text": "Excelente"
+            }
+          ]
+        }
+        ]
+      }
+    ]
+}

@@ -1,0 +1,424 @@
+import { useState } from 'react';
+import { 
+  LineChart, Line, BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, 
+  ResponsiveContainer, PieChart, Pie, Cell, RadarChart, Radar, PolarGrid, 
+  PolarAngleAxis, PolarRadiusAxis
+} from 'recharts';
+import { AlertTriangle, Award, Heart, User, ThumbsUp, Calendar, Home } from 'lucide-react';
+
+export default function HospitalDashboard() {
+  // Estado para controle de filtros
+  const [timeRange, setTimeRange] = useState('mensal');
+  const [department, setDepartment] = useState('todos');
+  
+  // Dados simulados - seriam substituídos por dados reais do formulário HCAHPS
+  const kpiData = {
+    satisfacaoGeral: {
+      valor: 8.4,
+      anterior: 8.1,
+      tendencia: 'aumento'
+    },
+    taxaRecomendacao: {
+      valor: 92,
+      anterior: 89,
+      tendencia: 'aumento'
+    },
+    cuidadosEnfermagem: {
+      valor: 3.7,
+      anterior: 3.5,
+      tendencia: 'aumento'
+    },
+    cuidadosMedicos: {
+      valor: 3.6,
+      anterior: 3.6,
+      tendencia: 'estavel'
+    }
+  };
+
+  // Dados para o gráfico radar dos cuidados
+  const cuidadosData = [
+    { categoria: 'Enfermagem', valor: 3.7, maximo: 4 },
+    { categoria: 'Médicos', valor: 3.6, maximo: 4 },
+    { categoria: 'Ambiente', valor: 3.5, maximo: 4 },
+    { categoria: 'Cuidados Gerais', valor: 3.4, maximo: 4 },
+    { categoria: 'Alta Hospitalar', valor: 3.0, maximo: 3 },
+    { categoria: 'Classificação Geral', valor: 8.4, maximo: 10 }
+  ];
+
+  // Dados de tendência temporal das categorias principais
+  const tendenciaData = [
+    { mes: 'Jan', enfermagem: 3.5, medicos: 3.4, ambiente: 3.3, cuidados: 3.2, alta: 2.8 },
+    { mes: 'Fev', enfermagem: 3.6, medicos: 3.5, ambiente: 3.4, cuidados: 3.3, alta: 2.9 },
+    { mes: 'Mar', enfermagem: 3.6, medicos: 3.5, ambiente: 3.4, cuidados: 3.3, alta: 2.9 },
+    { mes: 'Abr', enfermagem: 3.7, medicos: 3.6, ambiente: 3.5, cuidados: 3.4, alta: 3.0 }
+  ];
+
+  // Dados detalhados para categoria Cuidados de Enfermagem
+  const enfermagemDetalhes = [
+    { pergunta: 'Cortesia e respeito', valor: 3.8 },
+    { pergunta: 'Escuta atenta', valor: 3.7 },
+    { pergunta: 'Explicações claras', valor: 3.6 }
+  ];
+
+  // Dados detalhados para categoria Cuidados Médicos
+  const medicosDetalhes = [
+    { pergunta: 'Cortesia e respeito', valor: 3.7 },
+    { pergunta: 'Escuta atenta', valor: 3.6 },
+    { pergunta: 'Explicações claras', valor: 3.5 }
+  ];
+
+  // Dados detalhados para categoria Ambiente Hospitalar
+  const ambienteDetalhes = [
+    { pergunta: 'Limpeza', valor: 3.7 },
+    { pergunta: 'Descanso', valor: 3.4 },
+    { pergunta: 'Silêncio noturno', valor: 3.3 }
+  ];
+
+  // Dados de recomendação
+  const recomendacaoData = [
+    { resposta: 'Definitivamente sim', valor: 65 },
+    { resposta: 'Provavelmente sim', valor: 27 },
+    { resposta: 'Provavelmente não', valor: 5 },
+    { resposta: 'Definitivamente não', valor: 3 }
+  ];
+
+  // Cores para os gráficos
+  const COLORS = ['#0088FE', '#00C49F', '#FFBB28', '#FF8042', '#8884d8', '#82ca9d'];
+  const RECOMENDACAO_COLORS = ['#4CAF50', '#8BC34A', '#FFC107', '#FF5722'];
+
+  // Função para formatar o valor de acordo com a escala
+  const formatValue = (value, maxScale = 4) => {
+    if (maxScale === 10) return value.toFixed(1);
+    return value.toFixed(1);
+  };
+
+  return (
+    <div className="bg-gray-100 min-h-screen p-4">
+      <div className="flex justify-between items-center mb-6">
+        <h1 className="text-2xl font-bold text-blue-800">Dashboard de Satisfação do Utente (HCAHPS)</h1>
+        
+        <div className="flex gap-4">
+          <select 
+            className="px-4 py-2 rounded-md border border-gray-300"
+            value={timeRange}
+            onChange={(e) => setTimeRange(e.target.value)}
+          >
+            <option value="mensal">Mensal</option>
+            <option value="trimestral">Trimestral</option>
+            <option value="anual">Anual</option>
+          </select>
+          
+          <select 
+            className="px-4 py-2 rounded-md border border-gray-300"
+            value={department}
+            onChange={(e) => setDepartment(e.target.value)}
+          >
+            <option value="todos">Todos Departamentos</option>
+            <option value="cardiologia">Cardiologia</option>
+            <option value="pediatria">Pediatria</option>
+            <option value="ortopedia">Ortopedia</option>
+          </select>
+        </div>
+      </div>
+      
+      {/* KPIs principais */}
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
+        {/* Satisfação Geral */}
+        <div className="bg-white p-4 rounded-lg shadow-md">
+          <div className="flex items-center justify-between">
+            <div>
+              <p className="text-gray-500 text-sm">Satisfação Geral</p>
+              <div className="flex items-baseline">
+                <p className="text-2xl font-bold">{kpiData.satisfacaoGeral.valor}</p>
+                <p className="text-gray-500 text-xs ml-1">/10</p>
+              </div>
+              <div className={`text-xs ${kpiData.satisfacaoGeral.tendencia === 'aumento' ? 'text-green-500' : kpiData.satisfacaoGeral.tendencia === 'estavel' ? 'text-gray-500' : 'text-red-500'}`}>
+                {kpiData.satisfacaoGeral.tendencia === 'aumento' ? '↑' : kpiData.satisfacaoGeral.tendencia === 'estavel' ? '→' : '↓'} vs. período anterior ({kpiData.satisfacaoGeral.anterior})
+              </div>
+            </div>
+            <Award className="h-10 w-10 text-blue-500" />
+          </div>
+        </div>
+
+        {/* Taxa de Recomendação */}
+        <div className="bg-white p-4 rounded-lg shadow-md">
+          <div className="flex items-center justify-between">
+            <div>
+              <p className="text-gray-500 text-sm">Taxa de Recomendação</p>
+              <p className="text-2xl font-bold">{kpiData.taxaRecomendacao.valor}%</p>
+              <div className={`text-xs ${kpiData.taxaRecomendacao.tendencia === 'aumento' ? 'text-green-500' : kpiData.taxaRecomendacao.tendencia === 'estavel' ? 'text-gray-500' : 'text-red-500'}`}>
+                {kpiData.taxaRecomendacao.tendencia === 'aumento' ? '↑' : kpiData.taxaRecomendacao.tendencia === 'estavel' ? '→' : '↓'} vs. período anterior ({kpiData.taxaRecomendacao.anterior}%)
+              </div>
+            </div>
+            <ThumbsUp className="h-10 w-10 text-green-500" />
+          </div>
+        </div>
+
+        {/* Cuidados de Enfermagem */}
+        <div className="bg-white p-4 rounded-lg shadow-md">
+          <div className="flex items-center justify-between">
+            <div>
+              <p className="text-gray-500 text-sm">Cuidados de Enfermagem</p>
+              <div className="flex items-baseline">
+                <p className="text-2xl font-bold">{kpiData.cuidadosEnfermagem.valor}</p>
+                <p className="text-gray-500 text-xs ml-1">/4</p>
+              </div>
+              <div className={`text-xs ${kpiData.cuidadosEnfermagem.tendencia === 'aumento' ? 'text-green-500' : kpiData.cuidadosEnfermagem.tendencia === 'estavel' ? 'text-gray-500' : 'text-red-500'}`}>
+                {kpiData.cuidadosEnfermagem.tendencia === 'aumento' ? '↑' : kpiData.cuidadosEnfermagem.tendencia === 'estavel' ? '→' : '↓'} vs. período anterior ({kpiData.cuidadosEnfermagem.anterior})
+              </div>
+            </div>
+            <Heart className="h-10 w-10 text-pink-500" />
+          </div>
+        </div>
+
+        {/* Cuidados Médicos */}
+        <div className="bg-white p-4 rounded-lg shadow-md">
+          <div className="flex items-center justify-between">
+            <div>
+              <p className="text-gray-500 text-sm">Cuidados Médicos</p>
+              <div className="flex items-baseline">
+                <p className="text-2xl font-bold">{kpiData.cuidadosMedicos.valor}</p>
+                <p className="text-gray-500 text-xs ml-1">/4</p>
+              </div>
+              <div className={`text-xs ${kpiData.cuidadosMedicos.tendencia === 'aumento' ? 'text-green-500' : kpiData.cuidadosMedicos.tendencia === 'estavel' ? 'text-gray-500' : 'text-red-500'}`}>
+                {kpiData.cuidadosMedicos.tendencia === 'aumento' ? '↑' : kpiData.cuidadosMedicos.tendencia === 'estavel' ? '→' : '↓'} vs. período anterior ({kpiData.cuidadosMedicos.anterior})
+              </div>
+            </div>
+            <User className="h-10 w-10 text-indigo-500" />
+          </div>
+        </div>
+      </div>
+
+      {/* Gráficos principais */}
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
+        {/* Gráfico Radar - Todas categorias */}
+        <div className="bg-white p-4 rounded-lg shadow-md">
+          <h2 className="text-lg font-semibold mb-4">Visão Geral por Categoria</h2>
+          <ResponsiveContainer width="100%" height={300}>
+            <RadarChart outerRadius={90} data={cuidadosData}>
+              <PolarGrid />
+              <PolarAngleAxis dataKey="categoria" />
+              <PolarRadiusAxis domain={[0, 4]} />
+              <Radar
+                name="Pontuação Atual"
+                dataKey="valor"
+                stroke="#8884d8"
+                fill="#8884d8"
+                fillOpacity={0.6}
+              />
+              <Tooltip formatter={(value) => [value.toFixed(1), "Pontuação"]} />
+              <Legend />
+            </RadarChart>
+          </ResponsiveContainer>
+        </div>
+
+        {/* Gráfico de Linha - Tendências ao longo do tempo */}
+        <div className="bg-white p-4 rounded-lg shadow-md">
+          <h2 className="text-lg font-semibold mb-4">Tendências por Categoria</h2>
+          <ResponsiveContainer width="100%" height={300}>
+            <LineChart data={tendenciaData}>
+              <CartesianGrid strokeDasharray="3 3" />
+              <XAxis dataKey="mes" />
+              <YAxis domain={[0, 4]} />
+              <Tooltip />
+              <Legend />
+              <Line type="monotone" dataKey="enfermagem" name="Enfermagem" stroke="#8884d8" />
+              <Line type="monotone" dataKey="medicos" name="Médicos" stroke="#82ca9d" />
+              <Line type="monotone" dataKey="ambiente" name="Ambiente" stroke="#ffc658" />
+              <Line type="monotone" dataKey="cuidados" name="Cuidados" stroke="#ff8042" />
+              <Line type="monotone" dataKey="alta" name="Alta" stroke="#0088FE" />
+            </LineChart>
+          </ResponsiveContainer>
+        </div>
+      </div>
+
+      {/* Detalhes por categoria */}
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-6">
+        {/* Cuidados de Enfermagem */}
+        <div className="bg-white p-4 rounded-lg shadow-md">
+          <h2 className="text-lg font-semibold mb-4 flex items-center">
+            <Heart className="h-5 w-5 text-pink-500 mr-2" />
+            Cuidados de Enfermagem
+          </h2>
+          <ResponsiveContainer width="100%" height={200}>
+            <BarChart 
+              data={enfermagemDetalhes}
+              layout="vertical"
+              margin={{ top: 5, right: 30, left: 20, bottom: 5 }}
+            >
+              <CartesianGrid strokeDasharray="3 3" />
+              <XAxis type="number" domain={[0, 4]} />
+              <YAxis type="category" dataKey="pergunta" width={150} />
+              <Tooltip />
+              <Bar dataKey="valor" fill="#8884d8" />
+            </BarChart>
+          </ResponsiveContainer>
+        </div>
+
+        {/* Cuidados Médicos */}
+        <div className="bg-white p-4 rounded-lg shadow-md">
+          <h2 className="text-lg font-semibold mb-4 flex items-center">
+            <User className="h-5 w-5 text-indigo-500 mr-2" />
+            Cuidados Médicos
+          </h2>
+          <ResponsiveContainer width="100%" height={200}>
+            <BarChart 
+              data={medicosDetalhes}
+              layout="vertical"
+              margin={{ top: 5, right: 30, left: 20, bottom: 5 }}
+            >
+              <CartesianGrid strokeDasharray="3 3" />
+              <XAxis type="number" domain={[0, 4]} />
+              <YAxis type="category" dataKey="pergunta" width={150} />
+              <Tooltip />
+              <Bar dataKey="valor" fill="#82ca9d" />
+            </BarChart>
+          </ResponsiveContainer>
+        </div>
+
+        {/* Ambiente Hospitalar */}
+        <div className="bg-white p-4 rounded-lg shadow-md">
+          <h2 className="text-lg font-semibold mb-4 flex items-center">
+            <Home className="h-5 w-5 text-blue-500 mr-2" />
+            Ambiente Hospitalar
+          </h2>
+          <ResponsiveContainer width="100%" height={200}>
+            <BarChart 
+              data={ambienteDetalhes}
+              layout="vertical"
+              margin={{ top: 5, right: 30, left: 20, bottom: 5 }}
+            >
+              <CartesianGrid strokeDasharray="3 3" />
+              <XAxis type="number" domain={[0, 4]} />
+              <YAxis type="category" dataKey="pergunta" width={150} />
+              <Tooltip />
+              <Bar dataKey="valor" fill="#ffc658" />
+            </BarChart>
+          </ResponsiveContainer>
+        </div>
+      </div>
+
+      {/* Classificação Geral & Recomendação */}
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
+        {/* Recomendação */}
+        <div className="bg-white p-4 rounded-lg shadow-md">
+          <h2 className="text-lg font-semibold mb-4">Recomendaria Este Hospital?</h2>
+          <div className="flex items-center">
+            <ResponsiveContainer width="60%" height={250}>
+              <PieChart>
+                <Pie
+                  data={recomendacaoData}
+                  cx="50%"
+                  cy="50%"
+                  labelLine={false}
+                  outerRadius={80}
+                  fill="#8884d8"
+                  dataKey="valor"
+                  label={({name, percent}) => `${name}: ${(percent * 100).toFixed(0)}%`}
+                >
+                  {recomendacaoData.map((entry, index) => (
+                    <Cell key={`cell-${index}`} fill={RECOMENDACAO_COLORS[index % RECOMENDACAO_COLORS.length]} />
+                  ))}
+                </Pie>
+                <Tooltip formatter={(value) => [`${value}%`, "Percentagem"]} />
+              </PieChart>
+            </ResponsiveContainer>
+            <div className="p-4 w-2/5">
+              <div className="text-xl font-bold text-green-600 mb-2">{kpiData.taxaRecomendacao.valor}%</div>
+              <div className="text-sm text-gray-600 mb-4">Taxa de recomendação positiva</div>
+              <div className={`p-2 rounded-md ${kpiData.taxaRecomendacao.valor >= 85 ? 'bg-green-100 text-green-800' : kpiData.taxaRecomendacao.valor >= 70 ? 'bg-yellow-100 text-yellow-800' : 'bg-red-100 text-red-800'}`}>
+                {kpiData.taxaRecomendacao.valor >= 85 ? 'Excelente' : kpiData.taxaRecomendacao.valor >= 70 ? 'Aceitável' : 'Necessita Atenção'}
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* Alertas e Pontos de Melhoria */}
+        <div className="bg-white p-4 rounded-lg shadow-md">
+          <h2 className="text-lg font-semibold mb-4 flex items-center">
+            <AlertTriangle className="h-5 w-5 text-yellow-500 mr-2" />
+            Alertas e Pontos de Melhoria
+          </h2>
+          <div className="space-y-4">
+            <div className="p-3 bg-yellow-50 border-l-4 border-yellow-400 rounded-md">
+              <div className="flex">
+                <div className="flex-shrink-0">
+                  <AlertTriangle className="h-5 w-5 text-yellow-400" />
+                </div>
+                <div className="ml-3">
+                  <p className="text-sm text-yellow-700">
+                    O silêncio noturno recebeu avaliações mais baixas (3.3/4)
+                  </p>
+                </div>
+              </div>
+            </div>
+            <div className="p-3 bg-red-50 border-l-4 border-red-400 rounded-md">
+              <div className="flex">
+                <div className="flex-shrink-0">
+                  <AlertTriangle className="h-5 w-5 text-red-400" />
+                </div>
+                <div className="ml-3">
+                  <p className="text-sm text-red-700">
+                    Informações sobre alta hospitalar precisam de melhoria (3.0/3)
+                  </p>
+                </div>
+              </div>
+            </div>
+            <div className="p-3 bg-green-50 border-l-4 border-green-400 rounded-md">
+              <div className="flex">
+                <div className="flex-shrink-0">
+                  <ThumbsUp className="h-5 w-5 text-green-400" />
+                </div>
+                <div className="ml-3">
+                  <p className="text-sm text-green-700">
+                    Cortesia e respeito da enfermagem receberam avaliação muito positiva (3.8/4)
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* Filtros avançados e opções */}
+      <div className="bg-white p-4 rounded-lg shadow-md mb-6">
+        <h2 className="text-lg font-semibold mb-4">Análise Avançada</h2>
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">Filtrar por Data</label>
+            <input type="date" className="w-full px-3 py-2 border border-gray-300 rounded-md" />
+          </div>
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">Filtrar por Departamento</label>
+            <select className="w-full px-3 py-2 border border-gray-300 rounded-md">
+              <option>Todos Departamentos</option>
+              <option>Cardiologia</option>
+              <option>Ortopedia</option>
+              <option>Pediatria</option>
+              <option>Neurologia</option>
+            </select>
+          </div>
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">Filtrar por Tipo de Utente</label>
+            <select className="w-full px-3 py-2 border border-gray-300 rounded-md">
+              <option>Todos Utentes</option>
+              <option>Internamento</option>
+              <option>Ambulatório</option>
+              <option>Emergência</option>
+            </select>
+          </div>
+        </div>
+      </div>
+
+      {/* Notas e Legendas */}
+      <div className="bg-blue-50 p-4 rounded-lg border border-blue-200">
+        <h3 className="font-medium text-blue-800 mb-2">Notas:</h3>
+        <ul className="text-sm text-blue-700 list-disc pl-5">
+          <li>Os dados apresentados são baseados em {timeRange === 'mensal' ? 'respostas do último mês' : timeRange === 'trimestral' ? 'respostas do último trimestre' : 'respostas do último ano'}</li>
+          <li>Pontuações inferiores a 3.0 são destacadas para atenção</li>
+          <li>Taxa de resposta ao inquérito: 68% dos utentes</li>
+        </ul>
+      </div>
+    </div>
+  );
+}

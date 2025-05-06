@@ -1,0 +1,8 @@
+{
+  "dependencies": {
+    "mongoose": "^8.13.0",
+    "survey-core": "^2.0.2",
+    "survey-creator-core": "^2.0.2",
+    "survey-react-ui": "^2.0.2"
+  }
+}

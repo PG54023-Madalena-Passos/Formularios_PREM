@@ -1,0 +1,474 @@
+/* Dashboard.css - Versão Responsiva */
+
+/* Estilos gerais */
+body {
+    margin: 0;
+    padding: 0;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: #ffff;
+    color: #333;
+}
+
+.dashboard-container {
+    background-color: #f0f0f0;
+    min-height: 100vh;
+    padding: 16px;
+    overflow-x: hidden;
+}
+
+.dashboard-content {
+    max-width: 1140px;
+    margin: 0 auto;
+}
+
+/* Header */
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 24px;
+    flex-wrap: wrap;
+    gap: 16px;
+}
+
+.logo img {
+    height: 40px;
+}
+
+.filters {
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+}
+
+.select-container {
+    position: relative;
+}
+
+.filter-select {
+    appearance: none;
+    background-color: white;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    padding: 6px 32px 6px 12px;
+    font-size: 14px;
+    cursor: pointer;
+    min-width: 120px;
+}
+
+.select-container::after {
+    content: "";
+    position: absolute;
+    right: 12px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 0;
+    height: 0;
+    border-left: 5px solid transparent;
+    border-right: 5px solid transparent;
+    border-top: 5px solid #666;
+    pointer-events: none;
+}
+
+/* Cards de indicadores */
+.indicators-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 16px;
+    margin-bottom: 24px;
+}
+
+.indicator-card {
+    background-color: white;
+    border-radius: 8px;
+    padding: 16px;
+    display: flex;
+    align-items: center;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.indicator-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.12);
+}
+
+.indicator-icon {
+    margin-right: 16px;
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+}
+
+.indicator-content {
+    flex-grow: 1;
+}
+
+.indicator-title {
+    margin: 0 0 4px 0;
+    font-size: 16px;
+    color: #555;
+    font-weight: 500;
+}
+
+.indicator-value {
+    margin-bottom: 4px;
+    display: flex;
+    align-items: baseline;
+}
+
+.value-main {
+    font-size: 24px;
+    font-weight: bold;
+}
+
+.value-max {
+    font-size: 14px;
+    color: #777;
+    margin-left: 2px;
+}
+
+.indicator-comparison {
+    font-size: 12px;
+    font-weight: 500;
+}
+
+.positive {
+    color: #4CAF50;
+}
+
+.negative {
+    color: #F44336;
+}
+
+/* Cards específicos */
+.indicator-card.satisfaction{
+    border-left: 5px solid #4387F7;
+}
+
+.satisfaction .indicator-icon {
+    background-color: rgba(0, 119, 204, 0.1);
+}
+.satisfaction .icon-award {
+    color: #4387F7;
+}
+
+.indicator-card.recommendation{
+    border-left: 5px solid #4CAF50;
+}
+
+.recommendation .indicator-icon {
+    background-color: rgba(76, 175, 80, 0.1);
+}
+.recommendation .icon-thumbs-up {
+    color: #4CAF50;
+}
+
+.indicator-card.nursing{
+    border-left: 5px solid #E91E63;
+}
+
+.nursing .indicator-icon {
+    background-color: rgba(233, 30, 99, 0.1);
+}
+.nursing .icon-heart {
+    color: #E91E63;
+}
+
+.indicator-card.medical{
+    border-left: 5px solid #6366F1;
+}
+
+.medical .indicator-icon {
+    background-color: rgba(63, 81, 181, 0.1);
+}
+.medical .icon-user {
+    color: #6366F1;
+}
+
+.environment .icon-plus {
+    color: #FFC107;
+}
+
+/* Gráficos */
+.chart-card {
+    background-color: white;
+    border-radius: 8px;
+    padding: 20px;
+    margin-bottom: 24px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.chart-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.12);
+}
+
+.chart-header {
+    display: flex;
+    align-items: center;
+    margin-bottom: 16px;
+}
+
+.chart-title {
+    margin: 0;
+    font-size: 18px;
+    font-weight: 500;
+    color: #555;
+    margin-left: 8px;
+}
+
+/* Containers com proporção responsiva */
+.chart-container {
+    width: 100%;
+    min-height: 250px;
+    position: relative;
+}
+
+.line-chart {
+    width: 100%;
+    min-height: 280px;
+    position: relative;
+}
+
+/* Pie chart pode manter altura se necessário */
+.pie-chart-container {
+    width: 100%;
+    min-height: 200px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+/* Recomendação */
+.recommendation-container {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 20px;
+}
+
+.recommendation-container .pie-chart-container {
+    width: 200px;
+    height: 200px;
+    flex-shrink: 0;
+}
+
+.recommendation-stats {
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
+}
+
+.recommendation-percentage {
+    font-size: 36px;
+    font-weight: bold;
+    color: #4CAF50;
+}
+
+.recommendation-label {
+    font-size: 16px;
+    color: #555;
+}
+
+.recommendation-badge {
+    background-color: #E8F5E9;
+    color: #4CAF50;
+    font-weight: 500;
+    padding: 4px 12px;
+    border-radius: 16px;
+    font-size: 14px;
+    margin-top: 8px;
+}
+
+/* Alertas */
+.alert-item {
+    display: flex;
+    align-items: flex-start;
+    padding: 12px;
+    border-radius: 4px;
+    margin-bottom: 12px;
+    border-left-width: 4px;
+    border-left-style: solid;
+    transition: background-color 0.2s ease;
+}
+
+.alert-item:hover {
+    filter: brightness(0.98);
+}
+
+.alert-icon {
+    margin-right: 8px;
+    flex-shrink: 0;
+    margin-top: 2px;
+}
+
+.alert-text {
+    font-size: 14px;
+}
+
+.alert-item.warning {
+    background-color: #FFF8E1;
+    border-left-color: #FFC107;
+}
+.alert-item.warning .icon-alert-triangle {
+    color: #FFC107;
+}
+
+.alert-item.danger {
+    background-color: #FFEBEE;
+    border-left-color: #F44336;
+}
+.alert-item.danger .icon-alert-triangle {
+    color: #F44336;
+}
+
+.alert-item.success {
+    background-color: #E8F5E9;
+    border-left-color: #4CAF50;
+}
+.alert-item.success .icon-thumbs-up {
+    color: #4CAF50;
+}
+
+/* Animações */
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.chart-card, .indicator-card {
+    animation: fadeIn 0.5s ease-out;
+}
+
+/* Responsividade - Tablet */
+@media (max-width: 1024px) {
+    .indicators-grid {
+        grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+    }
+    
+    .recommendation-container {
+        flex-direction: column;
+        align-items: center;
+    }
+    
+    .recommendation-stats {
+        align-items: center;
+        text-align: center;
+    }
+    
+    .chart-container,
+    .line-chart,
+    .pie-chart-container {
+        min-height: 200px;
+    }
+}
+
+/* Responsividade - Mobile */
+@media (max-width: 768px) {
+    .dashboard-container {
+        padding: 12px;
+    }
+    
+    .header {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+    
+    .indicators-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .indicator-card {
+        padding: 12px;
+    }
+    
+    .indicator-icon {
+        width: 40px;
+        height: 40px;
+    }
+    
+    .value-main {
+        font-size: 20px;
+    }
+    
+    .chart-card {
+        padding: 16px;
+    }
+    
+    .chart-container,
+    .line-chart {
+        min-height: 180px;
+    }
+    
+    .pie-chart-container {
+        min-height: 160px;
+    }
+    
+    .recommendation-percentage {
+        font-size: 28px;
+    }
+    
+    .recommendation-label {
+        font-size: 14px;
+    }
+    
+    .filters {
+        width: 100%;
+        justify-content: space-between;
+    }
+    
+    .filter-select {
+        padding: 5px 28px 5px 10px;
+        font-size: 13px;
+    }
+}
+
+/* Responsividade - Mobile pequeno */
+@media (max-width: 480px) {
+    .chart-container,
+    .line-chart {
+        min-height: 150px;
+    }
+    
+    .chart-title {
+        font-size: 14px;
+    }
+    
+    .indicator-title {
+        font-size: 14px;
+    }
+    
+    .recommendation-container .pie-chart-container {
+        width: 140px;
+        height: 140px;
+    }
+    
+    .recommendation-percentage {
+        font-size: 24px;
+    }
+    
+    .alert-text {
+        font-size: 13px;
+    }
+}
+
+/* Fix para gráficos em dispositivos pequenos */
+@media (max-width: 360px) {
+    .recharts-wrapper {
+        position: relative;
+        left: -10px;
+    }
+}
+
+/* Classe para tema escuro (para implementação futura) */
+.dark-theme {
+    /* Cores e estilos para tema escuro */
+}

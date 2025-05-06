@@ -1,0 +1,100 @@
+import mongoose from 'mongoose';
+import { randomUUID } from 'crypto';
+
+interface EncounterDocument {
+  id: string; // ID do Encounter (ex: "internamento5")
+  class: {
+    code: string;
+  };
+  period?: {
+    end?: string | Date;
+    [key: string]: any;
+  };
+  [key: string]: any;
+}
+
+interface QuestionnaireDocument {
+  id: string; // UUID (string)
+  code: string;
+  createdAt: Date;
+  encounterId: string; // Referência ao Encounter original
+}
+
+const pollInterval = 5000; // Intervalo de polling em milissegundos
+
+export const startEncounterPolling = () => {
+  mongoose.connection.once('open', async () => {
+    console.log('🔍 Polling for new Encounters...');
+
+    const encounterCollection = mongoose.connection.collection('Encounter');
+    console.log('✅ Conectado à coleção Encounter');
+
+    let lastChecked = new Date(Date.now() - 60 * 60 * 1000); // 1 hora atrás
+
+    setInterval(async () => {
+      console.log('🔄 Iniciando polling para novos Encounters...');
+      try {
+        const newEncounters = await encounterCollection.find({
+          'period.end': { $gt: lastChecked.toISOString() } // Comparação como string ISO
+        }).toArray();
+
+        console.log(`🔍 Encontrados ${newEncounters.length} novos Encounters`);
+        lastChecked = new Date();
+
+        const questionnaireCollection = mongoose.connection.collection('Questionnaire');
+
+        for (const encounter of newEncounters) {
+          const fullDocument = encounter as unknown as EncounterDocument;
+
+          if (!fullDocument?.class?.code) {
+            console.warn('⚠️ Encounter inserido sem class.code. Ignorado.');
+            continue;
+          }
+
+          if (!fullDocument.id) {
+            console.warn('⚠️ Encounter sem id. Ignorado.');
+            continue;
+          }
+
+          const encounterEnd = fullDocument.period?.end;
+          if (!encounterEnd) {
+            console.warn('⚠️ Encounter sem period.end. Ignorado.');
+            continue;
+          }
+
+          const endDate = encounterEnd instanceof Date ? encounterEnd : new Date(encounterEnd);
+          if (isNaN(endDate.getTime())) {
+            console.warn('⚠️ period.end inválido. Ignorado.');
+            continue;
+          }
+
+          // Checar se já existe um Questionnaire para este Encounter
+          const existing = await questionnaireCollection.findOne({
+            encounterId: fullDocument.id
+          });
+
+          if (existing) {
+            console.log(`⚠️ Questionnaire já existe para Encounter ${fullDocument.id}. Ignorado.`);
+            continue;
+          }
+
+          const newQuestionnaire: QuestionnaireDocument = {
+            id: randomUUID(), // UUID como campo separado
+            code: fullDocument.class.code,
+            createdAt: endDate,
+            encounterId: fullDocument.id, // Ligação ao Encounter
+          };
+
+          try {
+            await questionnaireCollection.insertOne(newQuestionnaire);
+            console.log(`✅ Novo Questionnaire criado: ${newQuestionnaire.id} (code: ${newQuestionnaire.code}, encounterId: ${newQuestionnaire.encounterId})`);
+          } catch (error) {
+            console.error('❌ Erro ao criar Questionnaire:', error);
+          }
+        }
+      } catch (error) {
+        console.error('❌ Erro ao buscar novos Encounters:', error);
+      }
+    }, pollInterval);
+  });
+};
