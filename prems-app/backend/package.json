@@ -2,10 +2,12 @@
   "name": "backend",
   "version": "1.0.0",
   "description": "",
-  "main": "backend.ts",
+  "main": "app.ts",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "ts-node backend.ts"
+    "start": "ts-node app.ts",
+    "clean": "rimraf dist && rimraf node_modules/.cache",
+    "build": "tsc"
   },
   "keywords": [],
   "author": "",
@@ -13,11 +15,17 @@
   "type": "commonjs",
   "dependencies": {
     "cors": "^2.8.5",
+    "date-fns": "^4.1.0",
+    "dotenv": "^16.5.0",
     "express": "^4.21.2",
-    "mongoose": "^6.0.0"
+    "mongoose": "^6.0.0",
+    "nodemailer": "^7.0.3"
   },
   "devDependencies": {
+    "@types/cors": "^2.8.18",
+    "@types/express": "^5.0.1",
     "@types/node": "^22.15.3",
+    "@types/nodemailer": "^6.4.17",
     "ts-node": "^10.9.2",
     "typescript": "^5.8.3"
   }

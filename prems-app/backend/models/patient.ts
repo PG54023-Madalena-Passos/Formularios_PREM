@@ -109,7 +109,7 @@ const PatientSchema: Schema<IPatient> = new Schema({
   ],
 });
 
-// Criar o modelo
+// Criar o modelo ou usa o já existente Patient
 const Patient: Model<IPatient> = mongoose.model<IPatient>('Patient', PatientSchema, 'Patient');
 
 export default Patient;

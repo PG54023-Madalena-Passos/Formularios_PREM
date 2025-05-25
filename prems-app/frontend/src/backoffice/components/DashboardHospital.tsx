@@ -126,7 +126,7 @@ const Dashboard: React.FC = () => {
               <h3 className="indicator-title">Satisfação Geral</h3>
               <div className="indicator-value">
                 <span className="value-main">8.6</span>
-                <span className="value-max">/10</span>
+                <span className="value-max"> </span>
               </div>
               <div className="indicator-comparison positive">
                 ↑ vs. período anterior (8.1)

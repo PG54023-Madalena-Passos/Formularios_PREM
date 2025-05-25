@@ -123,7 +123,7 @@
           },
           {
             "linkId": "5",
-            "text": "Forma como o médico o(a) ouviu.",
+            "text": "Forma como o(a) ouviu.",
             "type": "choice",
             "answerOption": [
               {

@@ -1,0 +1,70 @@
+import express from 'express';
+import mongoose, { Document, Model } from 'mongoose';
+import QuestionnaireModel from '../models/questionnaire';
+import { sendEmail } from '../functions/emailService'
+
+const router = express.Router();
+
+// Interface opcional para tipagem do documento
+interface IResposta extends Document {
+  tipo: string;
+  item: any;
+  dataSubmissao: Date;
+}
+
+// Schema genérico que aceita qualquer estrutura, com data incluída
+const respostaSchema = new mongoose.Schema(
+  {
+    tipo: { type: String, required: true },
+    item: { type: mongoose.Schema.Types.Mixed, required: true },
+    dataSubmissao: { type: Date, default: Date.now }
+  },
+  { strict: false }
+);
+
+// Modelo Mongoose
+const Resposta: Model<IResposta> = mongoose.model<IResposta>('Resposta', respostaSchema);
+
+// Rota para salvar respostas
+router.post('/', async (req, res): Promise<void> => {
+  try {
+    const { tipo, q_id, item } = req.body;
+
+    if (!tipo || !item) {
+      res.status(400).send({ error: 'Estrutura inválida de resposta' });
+      return;
+    }
+
+    const novaResposta = new Resposta({ tipo, item });
+    await novaResposta.save();
+
+    const questionnaire = await QuestionnaireModel.findOne({ id: q_id });
+    if (questionnaire) {
+
+      if (questionnaire.pacienteEmail) {
+        const email = questionnaire.pacienteEmail;
+        await sendEmail({ to: email, tipo: 'sucesso', link: '' });
+      }
+
+      await QuestionnaireModel.updateOne(
+        { id: q_id },
+        {
+          $set: { respondido: true },
+          $unset: { pacienteEmail: "" }
+        }
+      );
+      await questionnaire.save();
+      console.log('Questionário atualizado com sucesso.');
+    } else {
+      console.warn('Nenhum questionário encontrado com o id:', q_id);
+    }
+
+
+    res.status(201).send({ message: 'Respostas guardadas com sucesso!' });
+  } catch (error) {
+    console.error('Erro ao guardar:', error);
+    res.status(500).send({ error: 'Erro ao guardar respostas' });
+  }
+});
+
+export default router;
