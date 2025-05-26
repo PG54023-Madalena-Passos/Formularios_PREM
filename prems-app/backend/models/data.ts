@@ -1,7 +1,7 @@
 import mongoose, { Document, Schema } from 'mongoose';
 
-// Interface TypeScript representando o Questionário
-export interface IQuestionnaire extends Document {
+// Interface TypeScript representando o Necessary_data
+export interface IData extends Document {
   id: string;
   code: string;
   profissionais: string[];
@@ -13,7 +13,7 @@ export interface IQuestionnaire extends Document {
 }
 
 // Definição do Schema
-const QuestionnaireSchema = new Schema<IQuestionnaire>({
+const DataSchema = new Schema<IData>({
   id: { type: String, required: true },
   code: { type: String, required: true },
   profissionais: { type: [String], required: true },
@@ -25,7 +25,7 @@ const QuestionnaireSchema = new Schema<IQuestionnaire>({
 });
 
 
-// Criar o modelo ou usa o já existente Questionnaire
-const QuestionnaireModel = mongoose.model<IQuestionnaire>('Questionnaire', QuestionnaireSchema,'Questionnaire');
+// Criar o modelo ou usa o já existente Necessary_data
+const DataModel = mongoose.model<IData>('Necessary_data', DataSchema,'Necessary_data');
 
-export default QuestionnaireModel;
+export default DataModel;

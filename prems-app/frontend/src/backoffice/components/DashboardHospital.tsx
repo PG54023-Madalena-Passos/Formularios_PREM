@@ -9,7 +9,7 @@ import './Dashboard.css';
 const Dashboard: React.FC = () => {
   const [windowWidth, setWindowWidth] = useState(window.innerWidth);
   
-  // Monitorar mudanças no tamanho da janela
+  // Monitorizar mudanças no tamanho da janela
   useEffect(() => {
     const handleResize = () => setWindowWidth(window.innerWidth);
     window.addEventListener('resize', handleResize);

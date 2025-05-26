@@ -1,4 +1,4 @@
-// Identificar os Encounters do dia anterior e transformá-los em recursos Questionnaire anonimizados
+// Identificar os Encounters do dia anterior e transformá-los em recursos Data anonimizados
 
 import mongoose from 'mongoose';
 import { randomUUID } from 'crypto';
@@ -21,8 +21,8 @@ interface EncounterDocument {
   [key: string]: any;
 }
 
-// Estrutura do Questionnaire
-interface QuestionnaireDocument {
+// Estrutura dos dados guardados
+interface DataDocument {
   id: string;
   code: string;
   profissionais: Array<string>;
@@ -37,7 +37,7 @@ export const generateQuestionnairesForYesterday = async () => {
   console.log('🔄 Iniciando geração de Questionnaires para o dia anterior...');
 
   const encounterCollection = mongoose.connection.collection('Encounter');
-  const questionnaireCollection = mongoose.connection.collection('Questionnaire');
+  const dataCollection = mongoose.connection.collection('Necessary_data');
 
   // Calcula a data de ontem (00:00 até 23:59)
   const now = new Date();
@@ -59,7 +59,7 @@ export const generateQuestionnairesForYesterday = async () => {
   console.log(`📅 Procurando Encounters de ${startOfYesterday} até ${endOfYesterday}`);
 
   // Filtra os questionários com a data de ontem
-  const existing = await questionnaireCollection.findOne({
+  const existing = await dataCollection.findOne({
   DataEvento: {
     $gte: startOfYesterday,
     $lte: endOfYesterday
@@ -136,7 +136,7 @@ export const generateQuestionnairesForYesterday = async () => {
           }
         }
       
-        const newQuestionnaire: QuestionnaireDocument = {
+        const newQuestionnaire: DataDocument = {
           id: randomUUID(),
           code: fullDocument.class.code,
           profissionais,
@@ -149,7 +149,7 @@ export const generateQuestionnairesForYesterday = async () => {
       
 
         try {
-          await questionnaireCollection.insertOne(newQuestionnaire);
+          await dataCollection.insertOne(newQuestionnaire);
           console.log(`✅ Novo Questionnaire criado: ${newQuestionnaire.id} (code: ${newQuestionnaire.code})`);
         } catch (error) {
           console.error('❌ Erro ao criar Questionnaire:', error);

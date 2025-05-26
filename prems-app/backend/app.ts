@@ -24,6 +24,7 @@ import { generateQuestionnairesForYesterday } from './functions/createQuestionna
 import questionariosRoutes from './routes/questionnaireType';
 import { sendSecondEmails } from './functions/sendSecondEmail';
 import { SendFirstEmails } from './functions/sendFirstEmail';
+import statistics from './routes/statistics';
 
 
 const app: Application = express();
@@ -51,6 +52,7 @@ app.use('/api/patient', patientRoutes);
 app.use('/api/respostas', respostasRoutes);
 //app.use('/api/colecoes', colecoesRoutes);
 app.use('/api/questionnaire', questionariosRoutes);
+app.use('/api', statistics);
 
 
 // Iniciar servidor

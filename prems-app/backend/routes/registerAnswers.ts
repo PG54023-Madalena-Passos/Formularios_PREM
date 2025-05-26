@@ -1,69 +1,97 @@
 import express from 'express';
 import mongoose, { Document, Model } from 'mongoose';
-import QuestionnaireModel from '../models/questionnaire';
+import QuestionnaireResponse from '../models/questionnaireResponse';
+import DataModel from '../models/data';
 import { sendEmail } from '../functions/emailService'
 
 const router = express.Router();
-
-// Interface opcional para tipagem do documento
-interface IResposta extends Document {
-  tipo: string;
-  item: any;
-  dataSubmissao: Date;
-}
-
-// Schema genérico que aceita qualquer estrutura, com data incluída
-const respostaSchema = new mongoose.Schema(
-  {
-    tipo: { type: String, required: true },
-    item: { type: mongoose.Schema.Types.Mixed, required: true },
-    dataSubmissao: { type: Date, default: Date.now }
-  },
-  { strict: false }
-);
-
-// Modelo Mongoose
-const Resposta: Model<IResposta> = mongoose.model<IResposta>('Resposta', respostaSchema);
 
 // Rota para salvar respostas
 router.post('/', async (req, res): Promise<void> => {
   try {
     const { tipo, q_id, item } = req.body;
 
-    if (!tipo || !item) {
+    if (!tipo || !q_id || !item || !Array.isArray(item)) {
       res.status(400).send({ error: 'Estrutura inválida de resposta' });
       return;
     }
 
-    const novaResposta = new Resposta({ tipo, item });
-    await novaResposta.save();
-
-    const questionnaire = await QuestionnaireModel.findOne({ id: q_id });
-    if (questionnaire) {
-
-      if (questionnaire.pacienteEmail) {
-        const email = questionnaire.pacienteEmail;
-        await sendEmail({ to: email, tipo: 'sucesso', link: '' });
-      }
-
-      await QuestionnaireModel.updateOne(
-        { id: q_id },
-        {
-          $set: { respondido: true },
-          $unset: { pacienteEmail: "" }
-        }
-      );
-      await questionnaire.save();
-      console.log('Questionário atualizado com sucesso.');
+    let questionnaireURL = '';
+    if (tipo === 'AMB') {
+      questionnaireURL = 'http://example.org/fhir/Questionnaire/europep-questionnaire';
+    } else if (tipo === 'IMP') {
+      questionnaireURL = 'http://example.org/fhir/Questionnaire/hcahps-questionnaire';
     } else {
-      console.warn('Nenhum questionário encontrado com o id:', q_id);
+      res.status(400).send({ error: 'Tipo de questionário desconhecido' });
+      return;
     }
 
+    // Obter dados do questionário da base de dados
+    const data = await DataModel.findOne({ id: q_id });
+    const dataEvento = data?.DataEvento || new Date();
 
-    res.status(201).send({ message: 'Respostas guardadas com sucesso!' });
+    // Montar estrutura FHIR válida
+    const authored = new Date().toISOString();
+    const responseFHIR = {
+      resourceType: 'QuestionnaireResponse',
+      questionnaire: questionnaireURL,
+      status: 'completed',
+      authored,
+      extension: [
+        {
+          url: 'http://example.org/fhir/StructureDefinition/questionnaire-encounterDate',
+          valueDateTime: dataEvento
+        },
+        ...(data?.profissionais
+          ? [
+              {
+                url: 'http://hl7.org/fhir/StructureDefinition/practitioner',
+                valueReference: {
+                  reference: `Practitioner/${data.profissionais || 'unknown'}`
+                }
+              }
+            ]
+          : [])
+      ],
+      item: item.map(grupo => ({
+        linkId: grupo.linkId,
+        item: Object.entries(grupo)
+          .filter(([key]) => key !== 'linkId')
+          .map(([linkId, answer]) => {
+            const pergunta: any = {
+              linkId,
+              answer: typeof answer === 'number'
+                ? [{ valueInteger: answer }]
+                : typeof answer === 'string'
+                ? [{ valueString: answer }]
+                : []
+            };
+
+            return pergunta; // 👈 sem item: []
+          })
+      }))
+    };
+
+    // Guardar no MongoDB
+    await QuestionnaireResponse.create(responseFHIR);
+
+     // Enviar email e atualizar estado
+    if (data?.pacienteEmail) {
+      await sendEmail({ to: data.pacienteEmail, tipo: 'sucesso', link: '' });
+    }
+
+    await DataModel.updateOne(
+      { id: q_id },
+      {
+        $set: { respondido: true },
+        $unset: { pacienteEmail: '' }
+      }
+    );
+
+    res.status(201).json({ message: 'Respostas guardadas com sucesso!' });
   } catch (error) {
-    console.error('Erro ao guardar:', error);
-    res.status(500).send({ error: 'Erro ao guardar respostas' });
+    console.error('Erro ao guardar resposta:', error);
+    res.status(500).json({ error: 'Erro ao guardar respostas' });
   }
 });
 

@@ -1,10 +1,10 @@
 import mongoose from 'mongoose';
-import QuestionnaireModel from '../models/questionnaire';
+import DataModel from '../models/data';
 import { sendEmail } from './emailService';
 
 
 export const SendFirstEmails = async () => {
-    const questionnaireCollection = mongoose.connection.collection('Questionnaire');
+    const dataCollection = mongoose.connection.collection('Necessary_data');
 
     const now = new Date();
     const startOfYesterday = new Date(Date.UTC(
@@ -22,7 +22,7 @@ export const SendFirstEmails = async () => {
     ));
 
     try{
-        const questionnaires = await questionnaireCollection.find({
+        const data = await dataCollection.find({
             DataEvento: {
              $gte: startOfYesterday,
              $lte: endOfYesterday 
@@ -33,9 +33,9 @@ export const SendFirstEmails = async () => {
 
         console.log("🕓 Enviar primeiro email ...")
 
-        console.log(`📬 ${questionnaires.length} e-mails a serem enviados`);
+        console.log(`📬 ${data.length} e-mails a serem enviados`);
 
-        for (const questionnaire of questionnaires) {
+        for (const questionnaire of data) {
         const email = questionnaire.pacienteEmail;
         const q_id = questionnaire.id;
 
@@ -47,7 +47,7 @@ export const SendFirstEmails = async () => {
             console.log(`✅ E-mail enviado para ${email}`);
 
             // Coloca a flag enviado a true, para que não seja enviado outro email repetido
-            await questionnaireCollection.updateOne(
+            await dataCollection.updateOne(
                 { _id: questionnaire._id },
                 { $set: { enviado: true } }
                 );

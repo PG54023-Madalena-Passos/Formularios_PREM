@@ -117,7 +117,7 @@ const FormularioInternamento: React.FC<FormularioInternamentoProps> = ({ onAnter
       console.log(ultimaParteUrl);
 
       const respostasFormatadas = {
-        tipo:"internamento",
+        tipo:"IMP",
         q_id: ultimaParteUrl,
         item: questionnaire!.item.map((group) => {
           const grupoRespostas: { [key: string]: number | string } = { linkId: group.linkId };

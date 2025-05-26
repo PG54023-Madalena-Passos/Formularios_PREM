@@ -2,7 +2,7 @@
 
 import express from 'express';
 import { Request, Response, NextFunction } from 'express';
-import QuestionnaireModel from '../models/questionnaire';
+import DataModel from '../models/data';
 
 const router = express.Router();
 
@@ -16,7 +16,7 @@ router.get('/:id', (req: Request, res: Response, next: NextFunction): void => {
         return;
       }
 
-      const questionnaire = await QuestionnaireModel.findOne({ id: id });
+      const questionnaire = await DataModel.findOne({ id: id });
       console.log(questionnaire)
 
       if (!questionnaire) {

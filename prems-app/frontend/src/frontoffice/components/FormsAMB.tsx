@@ -103,7 +103,7 @@ const FormularioConsulta: React.FC<FormularioConsultaProps> = ({ onAnterior, onP
       console.log(ultimaParteUrl);
 
       const respostasFormatadas = {
-        tipo:"consulta",
+        tipo:"AMB",
         q_id: ultimaParteUrl,
         item: questionnaire!.item.map((group) => {
           const grupoRespostas: { [key: string]: number | string } = { linkId: group.linkId };

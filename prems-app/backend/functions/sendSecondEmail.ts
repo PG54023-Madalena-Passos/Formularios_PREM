@@ -1,10 +1,10 @@
 import mongoose from 'mongoose';
-import QuestionnaireModel from '../models/questionnaire';
+import DataModel from '../models/data';
 import { sendEmail } from './emailService';
 
 
 export const sendSecondEmails = async () => {
-    const questionnaireCollection = mongoose.connection.collection('Questionnaire');
+    const dataCollection = mongoose.connection.collection('Necessary_data');
 
     const umaSemanaAtras = new Date();
     umaSemanaAtras.setDate(umaSemanaAtras.getDate() - 7);
@@ -13,7 +13,7 @@ export const sendSecondEmails = async () => {
     duasSemanasAtras.setDate(duasSemanasAtras.getDate() - 14);
 
     try{
-        const questionnaires = await questionnaireCollection.find({
+        const questionnaires = await dataCollection.find({
             DataEvento: {
             $gte: duasSemanasAtras,
             $lte: umaSemanaAtras
@@ -38,7 +38,7 @@ export const sendSecondEmails = async () => {
             console.log(`✅ E-mail de reforço enviado para ${email}`);
 
             // Coloca a flag reforco a true, para que não seja enviado outro email de reforço
-            await questionnaireCollection.updateOne(
+            await dataCollection.updateOne(
                 { _id: questionnaire._id },
                 { $set: { reforco: true } }
                 );
