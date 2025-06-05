@@ -25,7 +25,9 @@ import questionariosRoutes from './routes/questionnaireType';
 import { sendSecondEmails } from './functions/sendSecondEmail';
 import { SendFirstEmails } from './functions/sendFirstEmail';
 import statistics from './routes/statistics';
-
+import measureReports from './routes/measureReports';
+import {generateAndSaveMeasureReports} from './functions/generateMeasureReports';
+import { generateOrUpdateMonthlyMeasureReports } from './functions/generateMonthlyMeasureReports';
 
 const app: Application = express();
 
@@ -44,6 +46,12 @@ mongoose.connection.once('open', async () => {
   console.log('✅ Emails enviados com sucesso!');
   await sendSecondEmails();
   console.log('✅ Reforço a funcionar!');
+  await generateAndSaveMeasureReports();
+  generateOrUpdateMonthlyMeasureReports(new Date('2025-01-04'));
+  generateOrUpdateMonthlyMeasureReports(new Date('2025-03-04'));
+  generateOrUpdateMonthlyMeasureReports(new Date('2025-04-04'));
+  generateOrUpdateMonthlyMeasureReports(new Date('2025-05-04'));
+  generateOrUpdateMonthlyMeasureReports(new Date('2025-06-04'));
 });
 
 
@@ -53,6 +61,7 @@ app.use('/api/respostas', respostasRoutes);
 //app.use('/api/colecoes', colecoesRoutes);
 app.use('/api/questionnaire', questionariosRoutes);
 app.use('/api', statistics);
+app.use('/api/measurereports', measureReports);
 
 
 // Iniciar servidor

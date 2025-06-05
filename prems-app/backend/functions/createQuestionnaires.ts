@@ -2,6 +2,7 @@
 
 import mongoose from 'mongoose';
 import { randomUUID } from 'crypto';
+import DataModel from '../models/data';
 
 // Estrutura do Encounter
 interface EncounterDocument {
@@ -21,23 +22,11 @@ interface EncounterDocument {
   [key: string]: any;
 }
 
-// Estrutura dos dados guardados
-interface DataDocument {
-  id: string;
-  code: string;
-  profissionais: Array<string>;
-  DataEvento: Date;
-  pacienteEmail?: string;
-  enviado: Boolean;
-  reforco: Boolean;
-  respondido: Boolean; 
-}
-
 export const generateQuestionnairesForYesterday = async () => {
   console.log('🔄 Iniciando geração de Questionnaires para o dia anterior...');
 
   const encounterCollection = mongoose.connection.collection('Encounter');
-  const dataCollection = mongoose.connection.collection('Necessary_data');
+  const patientCollection = mongoose.connection.collection('Patient');
 
   // Calcula a data de ontem (00:00 até 23:59)
   const now = new Date();
@@ -59,7 +48,7 @@ export const generateQuestionnairesForYesterday = async () => {
   console.log(`📅 Procurando Encounters de ${startOfYesterday} até ${endOfYesterday}`);
 
   // Filtra os questionários com a data de ontem
-  const existing = await dataCollection.findOne({
+  const existing = await DataModel.findOne({
   DataEvento: {
     $gte: startOfYesterday,
     $lte: endOfYesterday
@@ -106,7 +95,29 @@ export const generateQuestionnairesForYesterday = async () => {
           continue;
         }
 
-        const profissionais = fullDocument.participant?.map(p => p.individual?.reference) || [];
+        const profissionais = [];
+
+        for (const p of fullDocument.participant || []) {
+          const ref = p.individual?.reference || '';
+          const profissionalId = ref.split('/')[1] || ref;
+
+          let area = 'UNK';
+
+          if (profissionalId) {
+            try {
+              const practitioner = await mongoose.connection
+                .collection('Practitioner')
+                .findOne({ id: profissionalId });
+
+              const cod = practitioner?.qualification?.[0]?.code?.coding?.[0]?.code;
+              if (cod) area = cod;
+            } catch (error) {
+              console.error(`❌ Erro ao buscar Practitioner ${profissionalId}:`, error);
+            }
+          }
+
+          profissionais.push({ profissionalId, area });
+        }
 
         let pacienteEmail: string | undefined = undefined;
 
@@ -136,7 +147,8 @@ export const generateQuestionnairesForYesterday = async () => {
           }
         }
       
-        const newQuestionnaire: DataDocument = {
+        try {
+        const newDoc = new DataModel({
           id: randomUUID(),
           code: fullDocument.class.code,
           profissionais,
@@ -144,13 +156,11 @@ export const generateQuestionnairesForYesterday = async () => {
           pacienteEmail,
           enviado: false,
           reforco: false,
-          respondido: false,  
-        };
-      
+          respondido: false
+        });
 
-        try {
-          await dataCollection.insertOne(newQuestionnaire);
-          console.log(`✅ Novo Questionnaire criado: ${newQuestionnaire.id} (code: ${newQuestionnaire.code})`);
+        await newDoc.save();
+        console.log(`✅ Questionnaire criado: ${newDoc.id}`);
         } catch (error) {
           console.error('❌ Erro ao criar Questionnaire:', error);
         }

@@ -2,7 +2,9 @@ import express from 'express';
 import mongoose, { Document, Model } from 'mongoose';
 import QuestionnaireResponse from '../models/questionnaireResponse';
 import DataModel from '../models/data';
-import { sendEmail } from '../functions/emailService'
+import { sendEmail } from '../functions/emailService';
+import { generateAndSaveMeasureReports } from '../functions/generateMeasureReports';
+import { generateOrUpdateMonthlyMeasureReports } from '../functions/generateMonthlyMeasureReports';
 
 const router = express.Router();
 
@@ -39,18 +41,17 @@ router.post('/', async (req, res): Promise<void> => {
       authored,
       extension: [
         {
-          url: 'http://example.org/fhir/StructureDefinition/questionnaire-encounterDate',
-          valueDateTime: dataEvento
+          url: 'http://example.org/fhir/StructureDefinition/necessaryData-q_id',
+          valueString: q_id
         },
         ...(data?.profissionais
-          ? [
-              {
-                url: 'http://hl7.org/fhir/StructureDefinition/practitioner',
-                valueReference: {
-                  reference: `Practitioner/${data.profissionais || 'unknown'}`
-                }
+          ? data.profissionais.map(p => ({
+              url: 'http://hl7.org/fhir/StructureDefinition/practitioner',
+              valueReference: {
+                reference: `Practitioner/${p.profissionalId}`,
+                display: p.area
               }
-            ]
+            }))
           : [])
       ],
       item: item.map(grupo => ({
@@ -87,6 +88,10 @@ router.post('/', async (req, res): Promise<void> => {
         $unset: { pacienteEmail: '' }
       }
     );
+
+    await generateAndSaveMeasureReports();
+    generateOrUpdateMonthlyMeasureReports(dataEvento);
+    console.log('✅ Estatisticas Guardadas!');
 
     res.status(201).json({ message: 'Respostas guardadas com sucesso!' });
   } catch (error) {

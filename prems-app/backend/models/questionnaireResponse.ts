@@ -16,7 +16,7 @@ const ExtensionSchema = new Schema(
       reference: { type: String },
       display: { type: String }
     },
-    valueDateTime: { type: Schema.Types.Mixed }
+    valueString: { type: String }
   },
   { _id: false }
 );

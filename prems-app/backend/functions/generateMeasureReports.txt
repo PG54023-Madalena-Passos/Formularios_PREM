@@ -1,0 +1,262 @@
+import QuestionnaireResponse from '../models/questionnaireResponse';
+import MeasureReport from '../models/measureReport';
+
+const average = (arr: number[]) =>
+  arr.length ? arr.reduce((a, b) => a + b, 0) / arr.length : 0;
+
+const round2 = (val: number) => Math.round(val * 100) / 100;
+
+function extractAnswers(items: any[], groupId: string): number[] {
+  const group = items.find(i => i.linkId === groupId);
+  if (!group?.item) return [];
+  return group.item
+    .flatMap((q: { answer: any[] }) => q.answer?.map((a: any) => a.valueInteger).filter((v: number) => typeof v === 'number') ?? []);
+}
+
+function extractAnswersOnly(items: any[], groupId: string, only: string[]): number[] {
+  const group = items.find(i => i.linkId === groupId);
+  if (!group?.item) return [];
+  return group.item
+    .filter((q: any) => only.includes(q.linkId))
+    .flatMap((q: any) => q.answer?.map((a: any) => a.valueInteger).filter((v: number) => typeof v === 'number') ?? []);
+}
+
+// Tipos
+type StatsGroup = {
+  enfermagem: number[];
+  medico: number[];
+  ambiente: number[];
+  satisfacao: number[];
+  recomendacao: number[];
+  alta: number[];
+  cuidadosPrestados: number[];
+};
+
+type ReportRow = {
+  month: string;
+  source: 'combined';
+  enfermagem: number;
+  medico: number;
+  ambiente: number;
+  satisfacao: number;
+  recomendacao: number;
+  alta: number;
+  cuidadosPrestados: number;
+};
+
+type PeriodKey = 'currentMonth' | 'last3Months' | 'last12Months';
+
+const periodLabels: Record<PeriodKey, string> = {
+  currentMonth: 'Mês Atual',
+  last3Months: 'Últimos 3 Meses',
+  last12Months: 'Último Ano'
+};
+
+// Função principal
+export async function generateAndSaveMeasureReports() {
+  const responses = await QuestionnaireResponse.find();
+  const now = new Date();
+
+  const periodStats: Record<PeriodKey, StatsGroup> = {
+    currentMonth: { enfermagem: [], medico: [], ambiente: [], satisfacao: [], recomendacao: [], alta: [], cuidadosPrestados: []},
+    last3Months: { enfermagem: [], medico: [], ambiente: [], satisfacao: [], recomendacao: [], alta: [], cuidadosPrestados: [] },
+    last12Months: { enfermagem: [], medico: [], ambiente: [], satisfacao: [], recomendacao: [], alta: [], cuidadosPrestados: [] }
+  };
+
+  const isInPeriod = {
+    currentMonth: (d: Date) =>
+      d.getFullYear() === now.getFullYear() && d.getMonth() === now.getMonth(),
+    last3Months: (d: Date) => {
+      const past = new Date(now);
+      past.setMonth(past.getMonth() - 3);
+      return d >= past && d <= now;
+    },
+    last12Months: (d: Date) => {
+      const past = new Date(now);
+      past.setFullYear(past.getFullYear() - 1);
+      return d >= past && d <= now;
+    }
+  };
+
+  for (const resItem of responses) {
+    const authored = new Date(resItem.authored);
+    const applicablePeriods = (Object.keys(isInPeriod) as PeriodKey[]).filter(period =>
+      isInPeriod[period](authored)
+    );
+
+    if (applicablePeriods.length === 0) continue;
+
+    const isEuropep = resItem.questionnaire.includes('europep');
+    const isHcahps = resItem.questionnaire.includes('hcahps');
+
+    const practitionerExt = resItem.extension?.find((e: any) =>
+      e.url === 'http://hl7.org/fhir/StructureDefinition/practitioner'
+    );
+    const areaCode = practitionerExt?.valueReference?.display || 'UNK';
+    const isMedico = areaCode === 'MD';
+    const isEnfermeiro = areaCode === 'RN';
+
+    for (const period of applicablePeriods) {
+      const group = periodStats[period];
+
+      if (isEnfermeiro && (isEuropep)) {
+        group.enfermagem.push(...extractAnswers(resItem.item, 'grp1'));
+      }
+
+      if (isMedico && isEuropep) {
+        group.medico.push(...extractAnswers(resItem.item, 'grp1'));
+      }
+
+      if (isEuropep) {
+        group.ambiente.push(...extractAnswersOnly(resItem.item, 'grp3', ['22', '23']));
+        //Converter numa escala de 0-10
+        group.satisfacao.push(...extractAnswersOnly(resItem.item, 'grp3', ['24']).map(val => val * 10 / 5));
+        group.cuidadosPrestados.push(...extractAnswers(resItem.item, 'grp2'));
+        
+      }
+
+      if (isHcahps) {
+        group.enfermagem.push(...extractAnswers(resItem.item, 'grp1').map(val => val * 5 / 4));
+        group.medico.push(...extractAnswers(resItem.item, 'grp2').map(val => val * 5 / 4));
+        group.ambiente.push(...extractAnswers(resItem.item, 'grp3').map(val => val * 5 / 4));
+        group.satisfacao.push(...extractAnswersOnly(resItem.item, 'grp6', ['24']));
+        group.recomendacao.push(...extractAnswersOnly(resItem.item, 'grp6', ['25']));
+        group.alta.push(...extractAnswersOnly(resItem.item, 'grp5', ['19','20']).map(val => val * 5 / 3));
+        group.alta.push(...extractAnswersOnly(resItem.item, 'grp5', ['22','23']).map(val => val * 5 / 2));
+        group.cuidadosPrestados.push(...extractAnswersOnly(resItem.item, 'grp4', ['10','11','13','14','16','17']).map(val => val * 5 / 4));
+        group.cuidadosPrestados.push(...extractAnswersOnly(resItem.item, 'grp4', ['18']).map(val => val * 5 / 3));
+      }
+    }
+  }
+
+  // Geração dos MeasureReports
+    const results: ReportRow[] = (Object.keys(periodStats) as PeriodKey[]).map(period => ({
+    month: periodLabels[period],
+    source: 'combined',
+    enfermagem: round2(average(periodStats[period].enfermagem)),
+    medico: round2(average(periodStats[period].medico)),
+    ambiente: round2(average(periodStats[period].ambiente)),
+    satisfacao: round2(average(periodStats[period].satisfacao)),
+    recomendacao: round2(average(periodStats[period].recomendacao)),
+    alta: round2(average(periodStats[period].alta)),
+    cuidadosPrestados: round2(average(periodStats[period].cuidadosPrestados)),
+  }));
+
+  const bundle = generateMeasureReportBundle(results);
+
+  await MeasureReport.deleteMany({});
+  const inserted = await MeasureReport.insertMany(bundle.entry.map((e: { resource: any }) => e.resource));
+
+  console.log(`${inserted.length} MeasureReports dos períodos combinados salvos.`);
+  return inserted;
+}
+
+// Geração do Bundle com MeasureReports
+function generateMeasureReportBundle(results: ReportRow[]) {
+  return {
+    resourceType: 'Bundle',
+    type: 'collection',
+    entry: results.map((row, index) => ({
+      fullUrl: `urn:uuid:measure-report-${index + 1}`,
+      resource: {
+        resourceType: 'MeasureReport',
+        id: `measure-report-${index + 1}`,
+        status: 'complete',
+        type: 'summary',
+        date: new Date().toISOString(),
+        period: {
+          start: getPeriodStart(row.month),
+          end: new Date().toISOString()
+        },
+        measure: `Measure/${row.source}-${row.month.replace(/\s+/g, '-').toLowerCase()}`,
+        group: [
+          {
+            id: 'enfermagem',
+            code: { text: 'Cuidados de Enfermagem' },
+            measureScoreQuantity: { value: row.enfermagem }
+          },
+          {
+            id: 'medico',
+            code: { text: 'Cuidados Médicos' },
+            measureScoreQuantity: { value: row.medico }
+          },
+          {
+            id: 'ambiente',
+            code: { text: 'Ambiente Hospitalar' },
+            measureScoreQuantity: { value: row.ambiente }
+          },
+          {
+            id: 'satisfacao',
+            code: { text: 'Satisfação Geral' },
+            measureScoreQuantity: { value: row.satisfacao }
+          },
+          {
+            id: 'recomendacao',
+            code: { text: 'Taxa de Recomendação' },
+            measureScoreQuantity: { value: row.recomendacao }
+          },
+          {
+            id: 'alta',
+            code: { text: 'Alta' },
+            measureScoreQuantity: { value: row.alta }
+          },
+          {
+            id: 'cuidadosPrestados',
+            code: { text: 'Cuidados Prestados' },
+            measureScoreQuantity: { value: row.cuidadosPrestados }
+          }
+        ]
+      }
+    }))
+  };
+}
+
+// Calcula o início do período com base no label
+function getPeriodStart(label: string): string {
+  const now = new Date();
+  const start = new Date(now);
+
+  switch (label) {
+    case 'Mês Atual':
+      start.setDate(1);
+      break;
+    case 'Últimos 3 Meses':
+      start.setMonth(now.getMonth() - 3);
+      start.setDate(1);
+      break;
+    case 'Último Ano':
+      start.setFullYear(now.getFullYear() - 1);
+      start.setDate(1);
+      break;
+    default:
+      start.setMonth(0);
+      start.setDate(1);
+  }
+
+  return start.toISOString();
+}
+
+
+
+
+
+
+enfermagem: [],
+    medico: [],
+    ambiente: [],
+    satisfacao: [],
+    recomendacao: [],
+    alta: [],
+    cuidadosPrestados: [],
+    enfCortesiaRespeito: [],
+    medCortesiaRespeito: [],
+    enfEscuta: [],
+    medEscuta: [],
+    enfComunicacao: [],
+    medComunicacao: [],
+    enfTempo: [],
+    medTempo: [],
+    limpeza: [],
+    confortoDescanso: [],
+    taxaRecPos: [],
+    taxaRecNeg: []

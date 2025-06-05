@@ -257,7 +257,7 @@ const FormularioInternamento: React.FC<FormularioInternamentoProps> = ({ onAnter
     <div className="fundo">
       <div className="barra-verde-topo"></div>
       <div className="formulario-container">
-        <h1 className="titulo">{questionnaire.title.toUpperCase()}</h1>
+        <h1 className="titulo">INQUÉRITO DE SATISFAÇÃO DO UTENTE</h1>
         
         <div className="progresso-container">
           <div className="progresso-wrapper">

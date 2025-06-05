@@ -12,7 +12,7 @@ export interface IMeasureReport extends Document {
   date: string;
   group: {
     id: string;
-    measureScore: {
+    measureScoreQuantity: {
       value: number;
     };
   }[];
@@ -36,7 +36,7 @@ const MeasureReportSchema = new Schema<IMeasureReport>(
     group: [
       {
         id: { type: String, required: true },
-        measureScore: {
+        measureScoreQuantity: {
           value: { type: Number, required: true }
         }
       }
