@@ -33,23 +33,29 @@ Após a submissão do formulário, as respostas inseridas serão armazenadas jun
 
    	2.4. OCDE PaRIS
 
-4. Sistemas de Informação em Saúde
+3. Sistemas de Informação em Saúde
 
-	4.1. Sistemas de Informação Hospitalares em Portugal
+	3.1. Sistemas de Informação Hospitalares em Portugal
 
-   		4.1.1. Registo de Saúde Eletrónico
+   		3.1.1. Registo de Saúde Eletrónico
    
-		2.1.2. SONHO
+		3.1.2. SONHO
    
-		2.1.3. SClínico Hospitalar
+		3.1.3. SClínico Hospitalar
 
- 	2.2. Interoperabilidade em Sistemas de Saúde
+   	3.2. Interoperabilidade em Sistemas de Saúde
 
-		2.2.1. HL7 V2
+		3.2.1. HL7 V2
    
-		2.2.2. HL7 FHIR
+		3.2.2. HL7 FHIR
 
-   5. Arquitetura da Solução Proposta
+4. Tecnologias de Recolha de PREMs
+
+   	4.1. Metodologia de Revisão Sistemática
+
+   	4.2. Resultados da Revisão
+
+5. Arquitetura da Solução Proposta
 
    	5.1. Tecnologias de Desenvolvimento de Aplicações
 
