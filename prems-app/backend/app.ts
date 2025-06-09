@@ -20,7 +20,7 @@ import mongoose from 'mongoose';
 import colecoesRoutes from './functions/encounters'
 import patientRoutes from './routes/patient';
 import respostasRoutes from './routes/registerAnswers';
-import { generateQuestionnairesForYesterday } from './functions/createQuestionnaires';
+import { generateQuestionnairesForYesterday } from './functions/createQuestionnaire';
 import questionariosRoutes from './routes/questionnaireType';
 import { sendSecondEmails } from './functions/sendSecondEmail';
 import { SendFirstEmails } from './functions/sendFirstEmail';
@@ -47,11 +47,7 @@ mongoose.connection.once('open', async () => {
   await sendSecondEmails();
   console.log('✅ Reforço a funcionar!');
   await generateAndSaveMeasureReports();
-  generateOrUpdateMonthlyMeasureReports(new Date('2025-01-04'));
-  generateOrUpdateMonthlyMeasureReports(new Date('2025-03-04'));
-  generateOrUpdateMonthlyMeasureReports(new Date('2025-04-04'));
-  generateOrUpdateMonthlyMeasureReports(new Date('2025-05-04'));
-  generateOrUpdateMonthlyMeasureReports(new Date('2025-06-04'));
+  
 });
 
 
