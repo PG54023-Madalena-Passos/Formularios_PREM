@@ -13,44 +13,58 @@ Após a submissão do formulário, as respostas inseridas serão armazenadas jun
 
 	1.1. Enquadramento e Motivação
    
-	1.2. Objetivos
+		1.1.1. Contexto Histórico
    
-	1.3. Estrutura da Dissertação
-
-2. Conceitos e Tecnologias
-
-	2.1. Interoperabilidade em Sistemas de Saúde
-
-		2.1.1. Definição e Importância da Interoperabilidade
+   		1.1.2. Relevância dos PREMs e obstáculos à sua implementação
    
-		2.1.2. Padrões de Interoperabilidade na Saúde
+	1.2. Solução Proposta e Objetivos
    
-		2.1.3. Desafios e Benefícios da Interoperabilidade
+	1.3. Abordagem Metodológica
 
- 	2.2. HL7 e a sua Aplicação em Sistemas de Informação Hospitalar
+   	1.4. Estrutura da Dissertação
 
-		2.2.1. Padrões HL7
+2. Patient Reported Experience Measures
+
+	2.1. PREMs em Portugal
+
+   	2.2. Padrão Americano - HCAHPS
+
+   	2.3. EUROPEP
+
+   	2.4. OCDE PaRIS
+
+4. Sistemas de Informação em Saúde
+
+	4.1. Sistemas de Informação Hospitalares em Portugal
+
+   		4.1.1. Registo de Saúde Eletrónico
    
-		2.2.2. Estrutura e Funcionamento de Mensagens HL7
+		2.1.2. SONHO
    
-		2.2.3. Casos de Uso do HL7 em Hospitais
+		2.1.3. SClínico Hospitalar
 
- 	2.3. Automação de Formulários PREM em Contexto Hospitalar
+ 	2.2. Interoperabilidade em Sistemas de Saúde
 
-   		2.3.1. Experiência Relatada por Pacientes (PREMs)
+		2.2.1. HL7 V2
+   
+		2.2.2. HL7 FHIR
 
-		2.3.2. Ferramentas e Tecnologias para Distribuição de PREMs
+   5. Arquitetura da Solução Proposta
 
-   		2.3.3. Integração de PREMs com Registros Eletrónicos de Saúde (EHR)
+   	5.1. Tecnologias de Desenvolvimento de Aplicações
 
- 	2.4. Desafios e Oportunidades
+   		5.1.1. Tecnologias de _Frontend_
 
-		2.4.1. Desafios na Implementação de Soluções Automatizadas em Hospitais
+		5.1.2. Tecnologias de _Backend_
 
-3. Desenvolvimento do _Software_
+		5.1.3. Tecnologias de Base de Dados
 
-4. Análise e Discussão de Resultados
+ 	5.2. Arquitetura do Sistema
 
-5. Conclusões e Trabalho Futuro
+6. Desenvolvimento do _Software_
+
+7. Análise e Discussão de Resultados
+
+8. Conclusões e Trabalho Futuro
 
 
