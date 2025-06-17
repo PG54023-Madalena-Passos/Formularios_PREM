@@ -1,18 +1,3 @@
-// Importante: Implementar a verificação de questionários em 24h em vez de quando inicia o servidor
-/*
-
-!npm install node-cron
-
-import cron from 'node-cron';
-
-// Rodar todos os dias às 09:00 da manhã
-cron.schedule('0 9 * * *', async () => {
-  console.log('⏰ Executando tarefa diária para gerar Questionnaires...');
-  await generateQuestionnairesForYesterday();
-});
-
-*/
-
 import express, { Application } from 'express';
 import cors from 'cors';
 import connectDB from './bd';
@@ -28,12 +13,23 @@ import statistics from './routes/statistics';
 import measureReports from './routes/measureReports';
 import {generateAndSaveMeasureReports} from './functions/generateMeasureReports';
 import { generateOrUpdateMonthlyMeasureReports } from './functions/generateMonthlyMeasureReports';
+import authRoutes from './routes/auth';
+import cookieParser from 'cookie-parser';
+import cron from 'node-cron';
 
 const app: Application = express();
 
 // Middleware
-app.use(cors());
+app.use(cors({
+  origin: 'http://localhost:3000',
+  credentials: true               // Permite o envio de cookies
+}));
 app.use(express.json());
+
+
+app.use(cookieParser());
+app.use('/api/auth', authRoutes);
+
 
 // Conectar à base de dados
 connectDB();
@@ -50,6 +46,19 @@ mongoose.connection.once('open', async () => {
   
 });
 
+/*
+// Verificação de questionários e envio de emails a cada 24h (às 09h)
+cron.schedule('0 9 * * *', async () => {
+  console.log('⏰ Executando tarefa diária para gerar Questionnaires...');
+  await generateQuestionnairesForYesterday();
+  console.log('✅ Questionnaires do dia anterior gerados!');
+  await SendFirstEmails();
+  console.log('✅ Emails enviados com sucesso!');
+  await sendSecondEmails();
+  console.log('✅ Reforço a funcionar!');
+  await generateAndSaveMeasureReports();
+});
+*/
 
 // Rotas
 app.use('/api/patient', patientRoutes);

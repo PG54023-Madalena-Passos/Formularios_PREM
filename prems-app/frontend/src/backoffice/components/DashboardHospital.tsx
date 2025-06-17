@@ -6,6 +6,7 @@ import {
 } from 'recharts';
 
 import './Dashboard.css';
+import { useNavigate } from 'react-router-dom';
 
 interface MeasureReport {
   _id: string;
@@ -344,6 +345,20 @@ const Dashboard = () => {
       return null;
     }
 
+  
+  const navigate = useNavigate();
+
+  const handleLogout = async () => {
+  console.log('LOGOUT');
+  localStorage.removeItem('accessToken');
+  await fetch('http://localhost:5000/api/auth/logout', {
+    method: 'POST',
+    credentials: 'include',
+  });
+  navigate('/');
+};
+
+
 
   const currentData = getReportByFilterAndPeriod(measureReports, selectedFilter, selectedPeriod);
   const previousData = getPreviousMonthReport(measureReports, selectedFilter);
@@ -544,6 +559,8 @@ const Dashboard = () => {
             >
               Atualizar
             </button>
+
+            <button onClick={handleLogout} className="btn-atualizar">Logout</button>
 
           </div>
         </div>
@@ -750,7 +767,7 @@ const Dashboard = () => {
             backgroundColor: 'white',
             padding: '1.5rem',
             borderRadius: '8px',
-            boxShadow: '0 2px 4px rgba(0,0,0,0.1)'
+            boxShadow: '0 2px 4px hsla(0, 0.00%, 0.00%, 0.10)'
           }}>
             <h3 style={{ margin: '0 0 1rem 0', color: '#34495e' }}>Recomendaria este hospital</h3>
             <div style={{ display: 'flex', alignItems: 'center', gap: '2rem' }}>

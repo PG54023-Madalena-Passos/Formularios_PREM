@@ -5,6 +5,8 @@ import FormularioConsulta from './frontoffice/components/FormsAMB';
 import Dashboard from './backoffice/components/DashboardHospital';
 import PaginaMensagem from './frontoffice/components/MessagePage';
 import { mensagens } from './frontoffice/templates/messages';
+import PrivateRoute from './backoffice/components/PrivateRoute';
+import LoginPage from './backoffice/components/LoginPage';
 
 
 function InternamentoPage() {
@@ -122,7 +124,12 @@ function App() {
   return (
     <Router>
       <Routes>
-        <Route path="/dashboard" element={<Dashboard />} />
+        <Route path="/" element={<LoginPage />} />
+        <Route path="/dashboard" element={
+        <PrivateRoute>
+          <Dashboard />
+        </PrivateRoute>
+      } />
         <Route path="/internamento" element={<InternamentoPage />} />
         <Route path="/consulta" element={<ConsultaPage />} />
         <Route path="/:id" element={<TipoQuestionario />} />
