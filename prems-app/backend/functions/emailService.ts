@@ -4,9 +4,7 @@ import { join } from 'path';
 import { TipoMensagem, gerarMensagem } from './MessageType'; 
 
 
-
-// Carrega especificamente o arquivo email.env
-config({ path: join(__dirname, '../configs/email.env') });
+config({ path: 'configs/email.env' });
 
 
 // Verifica se as variáveis estão definidas

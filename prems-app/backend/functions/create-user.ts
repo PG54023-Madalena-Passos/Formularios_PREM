@@ -3,7 +3,7 @@ import bcrypt from 'bcryptjs';
 import UserModel from '../models/user'; // ajuste o caminho se necessário
 
 // Substitua pela sua URI real
-const MONGODB_URI = 'mongodb://localhost:27017/HL7_FHIR';
+var MONGODB_URI = 'mongodb://mongo:27017/HL7_FHIR';
 
 const [,, email, password] = process.argv;
 

@@ -8,7 +8,7 @@ import UserModel from '../models/user';
 const router = express.Router();
 
 // Carrega especificamente o arquivo process.env
-config({ path: join(__dirname, '../configs/process.env') });
+config({ path: 'configs/process.env' });
 
 router.post('/login', (req: Request, res: Response, next: NextFunction): void => {
   (async () => {
@@ -17,6 +17,8 @@ router.post('/login', (req: Request, res: Response, next: NextFunction): void =>
     console.log(email +" Pass: " + password );
 
     const user = await UserModel.findOne({ email });
+    console.log("Hash da senha no banco:", user.password);
+
     if (!user) {
       res.status(401).json({ error: 'Credenciais inválidas' });
       return;

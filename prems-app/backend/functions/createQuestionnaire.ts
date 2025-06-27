@@ -4,7 +4,9 @@ import fetch from 'node-fetch';
 
 interface Encounter {
   id: string;
-  class?: { code: string };
+  class?: {
+    code: string 
+};
   period?: { end?: string };
   participant?: Array<{
     individual?: { reference: string };
@@ -47,7 +49,7 @@ export const generateQuestionnairesForYesterday = async () => {
 
   try {
     // 1. Buscar todos os encounters finalizados
-    const res = await fetch('http://localhost:8081/fhir/Encounter?status=finished');
+    const res = await fetch('http://hapifhir:8080/fhir/Encounter?status=finished');
     const bundle : any = await res.json();
 
     if (!bundle.entry) {
@@ -65,6 +67,7 @@ export const generateQuestionnairesForYesterday = async () => {
       });
 
     console.log(`🔍 Encontrados ${encounters.length} Encounters finalizados ontem.`);
+    console.log(encounters);
 
     for (const encounter of encounters) {
       if (!encounter?.class?.code || !encounter?.location[0].period?.end) {
@@ -87,7 +90,7 @@ export const generateQuestionnairesForYesterday = async () => {
 
         if (profissionalId) {
           try {
-            const res = await fetch(`http://localhost:8081/fhir/${ref}`);
+            const res = await fetch(`http://hapifhir:8080/fhir/${ref}`);
 
             if (!res.ok) {
             console.error(`❌ Erro ao buscar Practitioner ${ref}: ${res.statusText}`);
@@ -110,7 +113,7 @@ export const generateQuestionnairesForYesterday = async () => {
 
       if (patientId) {
         try {
-          const res = await fetch(`http://localhost:8081/fhir/Patient/${patientId}`);
+          const res = await fetch(`http://hapifhir:8080/fhir/Patient/${patientId}`);
           const patient = await res.json() as any;
           const telecom = patient.telecom || [];
           const emailEntry = telecom.find((t: any) => t.system === 'email');
@@ -128,7 +131,7 @@ export const generateQuestionnairesForYesterday = async () => {
       try {
         const newDoc = new DataModel({
           id: randomUUID(),
-          code: encounter.class.code,
+          code: encounter.class?.code || 'UNK',
           profissionais,
           DataEvento: endDate,
           pacienteEmail,
