@@ -2,19 +2,25 @@ version: '3.8'
 
 services:
   mongo:
-    image: mongo
+    image: mongo:6.0
+    container_name: mongodb
     ports:
       - "27017:27017"
     volumes:
       - mongo-data:/data/db
+
+
 
   hapifhir:
     image: hapiproject/hapi
     ports:
       - "8081:8080"
 
+
+
   backend:
     build: ./backend
+    container_name: backend
     ports:
       - "5000:5000"
     depends_on:
@@ -24,6 +30,7 @@ services:
 
   frontend:
     build: ./frontend
+    container_name: frontend
     ports:
       - "3000:80"
     depends_on:

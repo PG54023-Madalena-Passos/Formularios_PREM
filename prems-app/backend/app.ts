@@ -34,6 +34,7 @@ app.use('/api/auth', authRoutes);
 // Conectar à base de dados
 connectDB();
 console.log("Successful connection to BD!");
+/*
 mongoose.connection.once('open', async () => {
   console.log('✅ Conexão aberta, gerando Questionnaires do dia anterior...');
   await generateQuestionnairesForYesterday();
@@ -45,10 +46,10 @@ mongoose.connection.once('open', async () => {
   await generateAndSaveMeasureReports();
   
 });
+*/
 
-/*
 // Verificação de questionários e envio de emails a cada 24h (às 09h)
-cron.schedule('0 9 * * *', async () => {
+cron.schedule('25 10 * * *', async () => {
   console.log('⏰ Executando tarefa diária para gerar Questionnaires...');
   await generateQuestionnairesForYesterday();
   console.log('✅ Questionnaires do dia anterior gerados!');
@@ -57,8 +58,10 @@ cron.schedule('0 9 * * *', async () => {
   await sendSecondEmails();
   console.log('✅ Reforço a funcionar!');
   await generateAndSaveMeasureReports();
+},{
+  timezone: "Europe/Lisbon"
 });
-*/
+
 
 // Rotas
 app.use('/api/patient', patientRoutes);
