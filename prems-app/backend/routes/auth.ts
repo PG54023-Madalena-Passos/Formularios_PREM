@@ -32,8 +32,8 @@ router.post('/login', (req: Request, res: Response, next: NextFunction): void =>
       return;
     }
 
-    const accessToken = jwt.sign({ id: user._id }, process.env.JWT_SECRET!, { expiresIn: '15m' });
-    const refreshToken = jwt.sign({ id: user._id }, process.env.REFRESH_SECRET!, {
+    const accessToken = jwt.sign({ id: user._id, role: user.role }, process.env.JWT_SECRET!, { expiresIn: '15m' });
+    const refreshToken = jwt.sign({ id: user._id, role: user.role }, process.env.REFRESH_SECRET!, {
       expiresIn: remember ? '30d' : '1d'
     });
 
@@ -44,7 +44,10 @@ router.post('/login', (req: Request, res: Response, next: NextFunction): void =>
         sameSite: 'strict',
         maxAge: remember ? 30 * 24 * 60 * 60 * 1000 : 24 * 60 * 60 * 1000
       })
-      .json({ accessToken });
+      .json({ 
+        accessToken, 
+        role: user.role 
+      });
 
   })().catch(next);
 });

@@ -5,12 +5,14 @@ import UserModel from '../models/user'; // ajuste o caminho se necessário
 // Substitua pela sua URI real
 var MONGODB_URI = 'mongodb://mongo:27017/HL7_FHIR';
 
-const [,, email, password] = process.argv;
+const [,, email, password, roleArg] = process.argv;
 
 if (!email || !password) {
   console.error('❌ Uso: npm run create-user <email> <senha>');
   process.exit(1);
 }
+
+const role = roleArg ? parseInt(roleArg, 10) : 0; // padrão = admin (0)
 
 const createUser = async () => {
   try {
@@ -22,11 +24,12 @@ const createUser = async () => {
     const user = new UserModel({
       email,
       password: hashedPassword,
-      remember: true
+      remember: true,
+      role
     });
 
     await user.save();
-    console.log(`✅ Usuário "${email}" criado com sucesso!`);
+    console.log(`✅ Usuário "${email}" criado com sucesso! (role=${role})`);
   } catch (err) {
     console.error('❌ Erro ao criar usuário:', err);
   } finally {

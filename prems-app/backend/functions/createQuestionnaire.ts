@@ -58,13 +58,18 @@ export const generateQuestionnairesForYesterday = async () => {
     }
 
     const encounters: Encounter[] = bundle.entry
-      .map((entry: any) => entry.resource)
-      .filter((enc: Encounter) => {
-        const end = enc?.location[0].period?.end;
-        if (!end) return false;
-        const endDate = new Date(end);
-        return endDate >= startOfYesterday && endDate <= endOfYesterday;
-      });
+    .map((entry: any) => entry.resource)
+    .filter((enc: Encounter) => {
+      const end = enc?.location?.[0]?.period?.end;
+      const code = enc?.class?.code;
+      if (!end || !code) return false;
+
+      const endDate = new Date(end);
+      const isInDateRange = endDate >= startOfYesterday && endDate <= endOfYesterday;
+      const isValidCode = code === 'IMP' || code === 'AMB';
+
+      return isInDateRange && isValidCode;
+    });
 
     console.log(`🔍 Encontrados ${encounters.length} Encounters finalizados ontem.`);
     console.log(encounters);

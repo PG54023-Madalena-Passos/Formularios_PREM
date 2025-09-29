@@ -38,6 +38,7 @@ const LoginPage = () => {
 
       alert('Login realizado com sucesso!');
       localStorage.setItem('accessToken', data.accessToken);
+      localStorage.setItem('role', String(data.role)); 
       navigate('/dashboard');
     } catch (err) {
       console.error(err);

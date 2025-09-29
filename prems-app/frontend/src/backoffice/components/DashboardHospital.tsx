@@ -4,6 +4,8 @@ import {
   XAxis, YAxis, CartesianGrid, Tooltip, Legend,
   ResponsiveContainer 
 } from 'recharts';
+import { RefreshCcw, Settings, LogOut , X, Plus } from 'lucide-react';
+import EmailPopup from './Popup';
 
 import './Dashboard.css';
 import { useNavigate } from 'react-router-dom';
@@ -27,6 +29,16 @@ const Dashboard = () => {
   const [error, setError] = useState<string | null>(null);
   const [selectedPeriod, setSelectedPeriod] = useState<PeriodKey>('mes-atual');
   const [selectedFilter, setSelectedFilter] = useState<'todos' | 'internamento' | 'consultas'>('todos');
+  const [userRole, setUserRole] = useState<string | null>(null);
+  const [isEmailPopupOpen, setIsEmailPopupOpen] = useState(false);
+
+  useEffect(() => {
+  const role = localStorage.getItem('role');
+  setUserRole(role);
+  console.log("user role:", role); 
+}, []);
+
+  
 
   // Monitorizar mudanças no tamanho da janela
   useEffect(() => {
@@ -97,6 +109,102 @@ const Dashboard = () => {
     return reports.find(r => r.measure.includes(`${source}-${periodSuffix}`)) || null;
   }
 
+  // Função atualizada para obter dados com fallback
+  function getReportByFilterAndPeriodWithFallback(
+    reports: MeasureReport[],
+    filter: 'todos' | 'consultas' | 'internamento',
+    period: PeriodKey
+  ): { report: MeasureReport | null; isCurrentMonth: boolean; actualPeriod: string } {
+    const source = filter === 'todos' ? 'combined'
+                : filter === 'consultas' ? 'europep'
+                : 'hcahps';
+
+    let periodSuffix = '';
+    let isCurrentMonth = true;
+    
+    switch (period) {
+      case 'mes-atual': {
+        const now = new Date();
+        const month = (now.getMonth() + 1).toString().padStart(2, '0');
+        const year = now.getFullYear();
+        periodSuffix = `${year}-${month}`;
+        
+        // Tentar encontrar dados do mês atual
+        let report = reports.find(r => r.measure.includes(`${source}-${periodSuffix}`)) || null;
+        
+        // Se não encontrar dados do mês atual, procurar o mês mais recente disponível
+        if (!report) {
+          const monthlyReports = reports
+            .filter(r => r.measure.includes(source) && /\d{4}-\d{2}$/.test(r.measure))
+            .sort((a, b) => new Date(b.period.start).getTime() - new Date(a.period.start).getTime());
+          
+          if (monthlyReports.length > 0) {
+            report = monthlyReports[0];
+            isCurrentMonth = false;
+            // Extrair o período do relatório usado
+            const match = report.measure.match(/(\d{4}-\d{2})$/);
+            periodSuffix = match ? match[1] : 'desconhecido';
+          }
+        }
+        
+        return { report, isCurrentMonth, actualPeriod: periodSuffix };
+      }
+      case 'ultimos-3-meses':
+        periodSuffix = 'ultimos-3-meses';
+        break;
+      case 'ultimo-ano':
+        periodSuffix = 'ultimo-ano';
+        break;
+    }
+
+    const report = reports.find(r => r.measure.includes(`${source}-${periodSuffix}`)) || null;
+    return { report, isCurrentMonth: true, actualPeriod: periodSuffix };
+  }
+
+  // Função para formatar o período para exibição
+  function formatPeriodForDisplay(period: string, isCurrentMonth: boolean): string {
+    if (!isCurrentMonth && period.match(/\d{4}-\d{2}/)) {
+      const [year, month] = period.split('-');
+      const date = new Date(parseInt(year), parseInt(month) - 1);
+      return date.toLocaleDateString('pt-PT', { month: 'long', year: 'numeric' });
+    }
+    return '';
+  }
+
+  // Componente para indicar quando está usando dados de período anterior
+  const DataPeriodIndicator = ({ isCurrentMonth, actualPeriod, selectedPeriod }: { 
+    isCurrentMonth: boolean; 
+    actualPeriod: string; 
+    selectedPeriod: PeriodKey;
+  }) => {
+    if (isCurrentMonth || selectedPeriod !== 'mes-atual') return null;
+    
+    const displayPeriod = formatPeriodForDisplay(actualPeriod, isCurrentMonth);
+    
+    return (
+      <div style={{
+        backgroundColor: '#fff3cd',
+        border: '1px solid #ffeaa7',
+        borderRadius: '6px',
+        padding: '0.75rem 1rem',
+        marginBottom: '1rem',
+        fontSize: '14px',
+        color: '#856404',
+        display: 'flex',
+        alignItems: 'center',
+        gap: '0.5rem'
+      }}>
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+          <circle cx="12" cy="12" r="10"/>
+          <line x1="12" y1="8" x2="12" y2="12"/>
+          <line x1="12" y1="16" x2="12.01" y2="16"/>
+        </svg>
+        <span>
+          Dados do mês atual não disponíveis. Exibindo dados de: <strong>{displayPeriod}</strong>
+        </span>
+      </div>
+    );
+  };
 
   //Obter dados mensais
   function getMonthlyData(
@@ -143,7 +251,16 @@ const Dashboard = () => {
 
   // Estilização das tendências
   function TrendIndicator({ atual, anterior }: { atual: number | null; anterior: number | null }) {
-    if (atual === null || anterior === null) return null;
+    if (atual === null) return null;
+
+    // Se não há dados anteriores, mostrar mensagem
+    if (anterior === null) {
+      return (
+        <div style={{ fontSize: '12px', color: '#95a5a6' }}>
+          Sem dados de comparação
+        </div>
+      );
+    }
 
     let icon = '=';
     let color = '#7f8c8d';
@@ -162,7 +279,6 @@ const Dashboard = () => {
       </div>
     );
   }
-
 
   function TaxaPositiva({atual}: {atual:number | null}){
     if (atual === null) return null;
@@ -189,7 +305,6 @@ const Dashboard = () => {
           </div>
     )
   }
-
 
   // Alertas
   function buildAlertInputs(processedData: Record<string, any>) {
@@ -326,9 +441,7 @@ const Dashboard = () => {
     }
   }
 
-
-
-  // 🔢 Função para extrair valor de um grupo
+  // 📢 Função para extrair valor de um grupo
   function getValue(report: MeasureReport | null, key: string): number | null {
       if (!report || !Array.isArray(report.group)) return null;
 
@@ -345,7 +458,6 @@ const Dashboard = () => {
       return null;
     }
 
-  
   const navigate = useNavigate();
 
   const handleLogout = async () => {
@@ -358,11 +470,9 @@ const Dashboard = () => {
   navigate('/');
 };
 
-
-
-  const currentData = getReportByFilterAndPeriod(measureReports, selectedFilter, selectedPeriod);
+  // Usar a função com fallback
+  const { report: currentData, isCurrentMonth, actualPeriod } = getReportByFilterAndPeriodWithFallback(measureReports, selectedFilter, selectedPeriod);
   const previousData = getPreviousMonthReport(measureReports, selectedFilter);
-
 
   // Determinar layout responsivo
   const isMobile = windowWidth < 640;
@@ -411,7 +521,6 @@ const Dashboard = () => {
 
   // Dados históricos simulados (você pode expandir para buscar dados históricos reais)
   const lineChartData = getMonthlyData(measureReports, selectedFilter);
-
 
   // Cores para gráficos
   const COLORS = ['#4CAF50', '#FF5252'];
@@ -487,6 +596,7 @@ const Dashboard = () => {
   if (!processedData) {
     return <div>Nenhum dado disponível</div>;
   }
+  
 
   return (
     <div style={{ 
@@ -507,22 +617,17 @@ const Dashboard = () => {
         }}>
           <img 
             src="/logo_SantoAntonio.png" 
-            alt="Logo Santo Antônio" 
+            alt="Logo Santo António" 
             style={{ width: '120px', height: 'auto' }} 
           />
-          {/*
-          <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
-            <h1 style={{ margin: 0, color: '#2c3e50' }}>Dashboard Hospital Santo Antônio</h1>
-            <div style={{
-              width: '8px',
-              height: '8px',
-              borderRadius: '50%',
-              backgroundColor: '#27ae60',
-              animation: 'pulse 2s infinite'
-            }}></div>
-          </div>
-          */}
-          <div style={{ display: 'flex', gap: '1rem' }}>
+          
+          {/* Filter dropdowns */}
+          <div style={{ 
+            display: 'flex', 
+            gap: '1rem',
+            alignItems: 'center',
+            flexWrap: 'wrap'
+          }}>
             <select 
               value={selectedPeriod}
               onChange={(e) => setSelectedPeriod(e.target.value as PeriodKey)}
@@ -552,16 +657,99 @@ const Dashboard = () => {
               <option value="internamento">Internamento</option>
               <option value="consultas">Consultas</option>
             </select>
-            
-            <button 
-              onClick={fetchMeasureReports}
-              className="btn-atualizar"
+          </div>
+
+          {/* Icon buttons */}
+          <div style={{ display: 'flex', gap: '0.5rem', alignItems: 'center' }}>
+            {userRole === "1" && (
+            <button
+              onClick={() => setIsEmailPopupOpen(true)}
+              style={{
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                width: '40px',
+                height: '40px',
+                backgroundColor: 'white',
+                border: '1px solid #ddd',
+                borderRadius: '6px',
+                cursor: 'pointer',
+                color: '#666',
+                transition: 'all 0.2s'
+              }}
+              onMouseEnter={(e) => {
+                e.currentTarget.style.backgroundColor = '#f5f5f5';
+                e.currentTarget.style.color = '#333';
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.backgroundColor = 'white';
+                e.currentTarget.style.color = '#666';
+              }}
             >
-              Atualizar
+              <Settings size={18} />
+            </button>
+          )}
+
+          <EmailPopup 
+          isOpen={isEmailPopupOpen}
+          onClose={() => setIsEmailPopupOpen(false)}
+        />
+
+            <button
+              onClick={fetchMeasureReports}
+              style={{
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                width: '40px',
+                height: '40px',
+                backgroundColor: 'white',
+                border: '1px solid #ddd',
+                borderRadius: '6px',
+                cursor: 'pointer',
+                color: '#666',
+                transition: 'all 0.2s'
+              }}
+              onMouseEnter={(e) => {
+                e.currentTarget.style.backgroundColor = '#f5f5f5';
+                e.currentTarget.style.color = '#333';
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.backgroundColor = 'white';
+                e.currentTarget.style.color = '#666';
+              }}
+            >
+              <RefreshCcw size={18} />
             </button>
 
-            <button onClick={handleLogout} className="btn-atualizar">Logout</button>
+            
 
+            <button
+              onClick={handleLogout}
+              style={{
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                width: '40px',
+                height: '40px',
+                backgroundColor: 'white',
+                border: '1px solid #ddd',
+                borderRadius: '6px',
+                cursor: 'pointer',
+                color: '#666',
+                transition: 'all 0.2s'
+              }}
+              onMouseEnter={(e) => {
+                e.currentTarget.style.backgroundColor = '#f5f5f5';
+                e.currentTarget.style.color = '#333';
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.backgroundColor = 'white';
+                e.currentTarget.style.color = '#666';
+              }}
+            >
+              <LogOut size={18} />
+            </button>
           </div>
         </div>
 
@@ -582,7 +770,7 @@ const Dashboard = () => {
           }}>
             <h3 style={{ margin: '0 0 0.5rem 0', color: '#34495e', fontSize: '14px' }}>Satisfação Geral</h3>
             <div style={{ fontSize: '2rem', fontWeight: 'bold', color: '#f39c12' }}>
-              {processedData.satisfacaoGeral !== null ? processedData.satisfacaoGeral.toFixed(1): '—'}
+              {processedData.satisfacaoGeral !== null ? processedData.satisfacaoGeral.toFixed(1): '—'}<span style={{ fontSize: '1rem', color: '#7f8c8d' }}>/10</span>
             </div>
             {selectedPeriod === 'mes-atual' && processedData.satisfacaoGeral !== null && getValue(previousData, 'satisfacao') !== null && (
             <TrendIndicator 
@@ -607,7 +795,7 @@ const Dashboard = () => {
             {selectedPeriod === 'mes-atual' && processedData.taxaRecomendacao !== null && getValue(previousData, 'recomendacao') !== null && (
             <TrendIndicator 
               atual={processedData.taxaRecomendacao}
-              anterior={getValue(previousData, 'recomendacao')}
+              anterior={(getValue(previousData, 'recomendacao') ?? 0) * 100 / 4}
             />
           )}
           </div>
@@ -799,26 +987,23 @@ const Dashboard = () => {
 
         {/* Alertas e Recomendações */}
         <div style={{
-            backgroundColor: 'white',
-            padding: '1.5rem',
-            borderRadius: '8px',
-            boxShadow: '0 2px 4px rgba(0,0,0,0.1)',
-            margin: '2rem 0 0 0',
-          }}>
-            <h3 style={{ margin: '0 0 1rem 0', color: '#34495e' }}>Alertas e Recomendações</h3>
-            <ResponsiveContainer width="100%" height={isMobile ? 180 : 200}>
-                <div className="alert-list">
-              {processedData && (
-              <div className="alert-list">
-                {processedData &&
-                buildAlertInputs(processedData).map(({ area, atual }) =>
-                  alert({ area, atual })
-                )}
-              </div>
-              )}
+          backgroundColor: 'white',
+          padding: '1.5rem',
+          borderRadius: '8px',
+          boxShadow: '0 2px 4px rgba(0,0,0,0.1)',
+          margin: '2rem 0 0 0',
+          minHeight: '200px',
+          maxHeight: '500px', // limite se quiser scroll
+          overflowY: 'auto'   // scroll se conteúdo for maior que o container
+        }}>
+          <h3 style={{ margin: '0 0 1rem 0', color: '#34495e' }}>Alertas e Recomendações</h3>
+
+          <div className="alert-list">
+            {processedData && buildAlertInputs(processedData).map(({ area, atual }) =>
+              alert({ area, atual })
+            )}
           </div>
-            </ResponsiveContainer>
-          </div>
+        </div>
 
 
         {/* Timestamp da última atualização */}
@@ -830,6 +1015,8 @@ const Dashboard = () => {
         }}>
           Última atualização: {new Date().toLocaleString('pt-PT')}
         </div>
+
+        
 
         <style>{`
           @keyframes pulse {

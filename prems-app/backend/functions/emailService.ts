@@ -21,7 +21,7 @@ interface EmailOptions {
 }
 
 export async function sendEmail({ to, tipo, link }: EmailOptions): Promise<void> {
-  const { subject, html } = gerarMensagem(tipo, link);
+  const { subject, html } = await gerarMensagem(tipo, link);
 
   const transporter = nodemailer.createTransport({
     service: 'gmail',

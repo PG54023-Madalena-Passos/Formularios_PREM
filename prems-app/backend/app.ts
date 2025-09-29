@@ -2,7 +2,7 @@ import express, { Application } from 'express';
 import cors from 'cors';
 import connectDB from './bd';
 import mongoose from 'mongoose';
-import colecoesRoutes from './functions/encounters'
+import colecoesRoutes from './functions/encounters';
 import patientRoutes from './routes/patient';
 import respostasRoutes from './routes/registerAnswers';
 import { generateQuestionnairesForYesterday } from './functions/createQuestionnaire';
@@ -11,68 +11,43 @@ import { sendSecondEmails } from './functions/sendSecondEmail';
 import { SendFirstEmails } from './functions/sendFirstEmail';
 import statistics from './routes/statistics';
 import measureReports from './routes/measureReports';
-import {generateAndSaveMeasureReports} from './functions/generateMeasureReports';
+import { generateAndSaveMeasureReports } from './functions/generateMeasureReports';
 import { generateOrUpdateMonthlyMeasureReports } from './functions/generateMonthlyMeasureReports';
 import authRoutes from './routes/auth';
 import cookieParser from 'cookie-parser';
-import cron from 'node-cron';
+import cron, { ScheduledTask } from 'node-cron';
+import settingsRoutes from './routes/settings';
+import usersRoutes from './routes/users';
+import Settings from './models/settings';
+import cronRoutes from './routes/cron';
 
 const app: Application = express();
 
-// Middleware
+// ────────────────────────────── Middleware ──────────────────────────────
 app.use(cors({
   origin: 'http://localhost:3000',
-  credentials: true               // Permite o envio de cookies
+  credentials: true // Permite o envio de cookies
 }));
 app.use(express.json());
-
-
 app.use(cookieParser());
 app.use('/api/auth', authRoutes);
 
-
-// Conectar à base de dados
+// ────────────────────────────── Conectar BD ──────────────────────────────
 connectDB();
 console.log("Successful connection to BD!");
-/*
-mongoose.connection.once('open', async () => {
-  console.log('✅ Conexão aberta, gerando Questionnaires do dia anterior...');
-  await generateQuestionnairesForYesterday();
-  console.log('✅ Questionnaires do dia anterior gerados!');
-  await SendFirstEmails();
-  console.log('✅ Emails enviados com sucesso!');
-  await sendSecondEmails();
-  console.log('✅ Reforço a funcionar!');
-  await generateAndSaveMeasureReports();
-  
-});
-*/
-
-// Verificação de questionários e envio de emails a cada 24h (às 09h)
-cron.schedule('25 10 * * *', async () => {
-  console.log('⏰ Executando tarefa diária para gerar Questionnaires...');
-  await generateQuestionnairesForYesterday();
-  console.log('✅ Questionnaires do dia anterior gerados!');
-  await SendFirstEmails();
-  console.log('✅ Emails enviados com sucesso!');
-  await sendSecondEmails();
-  console.log('✅ Reforço a funcionar!');
-  await generateAndSaveMeasureReports();
-},{
-  timezone: "Europe/Lisbon"
-});
 
 
-// Rotas
+// ────────────────────────────── Rotas ──────────────────────────────
 app.use('/api/patient', patientRoutes);
 app.use('/api/respostas', respostasRoutes);
-//app.use('/api/colecoes', colecoesRoutes);
 app.use('/api/questionnaire', questionariosRoutes);
 app.use('/api', statistics);
 app.use('/api/measurereports', measureReports);
+app.use('/api/settings', settingsRoutes);
+app.use('/api/users', usersRoutes);
+app.use('/api/cron', cronRoutes);
 
-
-// Iniciar servidor
+// ────────────────────────────── Iniciar servidor ──────────────────────────────
 app.listen(5000, () => {
   console.log('Server listening on port 5000');
 });
